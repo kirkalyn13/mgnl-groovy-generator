@@ -1,0 +1,5 @@
+# Ollama
+REQUEST_TIMEOUT=120.0
+
+# Qdrant
+TOP_K_SIMILARITY=3
