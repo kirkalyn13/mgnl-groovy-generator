@@ -1,24 +1,22 @@
+import string
+
 from llama_index.core import VectorStoreIndex
-from config.qdrant import get_vector_store
+from config.qdrant import get_query_engine
 from config.ollama import setup_ollama
-from config.settings import TOP_K_SIMILARITY
 
-SAMPLE_QUERY = "Generate a Magnolia Groovy script to review user details"
 
-def query():
+SAMPLE_QUERY = "Generate a Magnolia Groovy script to review user details. Return only the script and nothing else."
+
+def query(prompt: string) -> string:
     # Configure Ollama models
     setup_ollama()
 
-    # Load index
-    vector_store=get_vector_store()
-    index = VectorStoreIndex.from_vector_store(vector_store)
-
     # Create query engine (top-k = 3)
-    query_engine = index.as_query_engine(similarity_top_k=TOP_K_SIMILARITY)
+    query_engine = get_query_engine()
 
     response = query_engine.query(SAMPLE_QUERY)
 
     print("\n=== RESPONSE ===\n")
     print(response)
 
-query()
+query(SAMPLE_QUERY)
