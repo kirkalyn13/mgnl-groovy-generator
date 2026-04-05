@@ -2,8 +2,8 @@ from fastapi import Request
 from config.logger import logger
 from config.settings import UNWANTED_RESPONSE_KEYWORDS, MAX_RETRIES
 
-# Run generate script query
 def run(query: str, request: Request) -> {str, str}:
+    """Run generate script query to Qdrant cluster"""
     try:
         logger.info(f"💬 Query: {query}")
         query_engine = request.app.state.query_engine
@@ -30,7 +30,6 @@ def run(query: str, request: Request) -> {str, str}:
         logger.error(f"‼️ Failed to generate script: {e}")
         raise
 
-# Validate response if it contains unwanted keywords
-# Keywords are usually edit syntax
 def contains_unwanted(text: str) -> bool:
+    """Validate response if it contains unwanted keywords e.g edit keywords"""
     return any(word in text.lower() for word in UNWANTED_RESPONSE_KEYWORDS)

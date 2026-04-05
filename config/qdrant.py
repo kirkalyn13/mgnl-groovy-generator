@@ -14,13 +14,15 @@ collection_name = os.getenv("COLLECTION_NAME", "magnolia_groovies")
 
 # Setup Client
 def setup_client() -> QdrantClient:
+    """Setup QDrant Client"""
     return QdrantClient(
         url = url,
         api_key = api_key,
     )
 
-# Instantiate Vector Store
+
 def init_vector_store():
+    """Instantiate QDrant Vector Store"""
     logger.info("⚙️  Setting up vector store...")
     client = setup_client()
 
@@ -33,8 +35,8 @@ def init_vector_store():
         collection_name=collection_name,
     )
 
-# Instantiate Query Engine
 def init_rag_engine():
+    """Instantiate Vector Store and Query Engine"""
     logger.info("⚙️  Setting up query engine...")
 
     vector_store = init_vector_store()

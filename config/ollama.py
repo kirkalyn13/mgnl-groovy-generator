@@ -12,8 +12,8 @@ base_url = os.getenv("OLLAMA_URL")
 embedding_model = os.getenv("OLLAMA_EMBEDDING_MODEL")
 llm = os.getenv("OLLAMA_LLM")
 
-# Setup Ollama Configurations
 def setup_ollama():
+    """Setup Ollama Configurations"""
     logger.info("⚙️ Setting up model...")
     logger.info(f"⚙️ LLM Base URL: {base_url}")
 
