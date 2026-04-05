@@ -1,8 +1,10 @@
-from routers.base import router, QueryRequest, QueryResponse
+from routers.base import router, QueryRequest, QueryResponse, limiter
 from fastapi import HTTPException, Request
 from services.generate import run
 
+
 @router.post("/generate", response_model=QueryResponse)
+@limiter.limit("1/second")
 def generate(request: Request, body: QueryRequest):
     try:
         query = body.query
