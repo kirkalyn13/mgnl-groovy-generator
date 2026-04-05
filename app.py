@@ -22,7 +22,7 @@ async def lifespan(app: FastAPI):
 
     logger.info("✅ RAG engine ready")
     yield
-
+ 
     # Shutdown: clean up if needed
     logger.info("👋 Shutting down")
 
@@ -35,11 +35,6 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 # Register routers
 register_routers(app)
-
-# Health Check
-@app.get("/health")
-def health():
-    return {"status": "ok"}
 
 # Runn Uvicorn server
 if __name__ == "__main__":
