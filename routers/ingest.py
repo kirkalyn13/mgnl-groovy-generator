@@ -1,4 +1,4 @@
-from routers.base import router, QueryRequest, QueryResponse
+from routers.base import BaseResponse, router, QueryRequest, QueryResponse
 from fastapi import HTTPException, Request
 import services.ingest as ingest
 
@@ -8,6 +8,7 @@ def generate(request: Request, body: QueryRequest):
         vector_store = request.app.state.vector_store
         ingested_files = ingest.run(vector_store)
         response = f"Successfully ingested {ingested_files} documents."
-        return QueryResponse(response=str(response))
+        
+        return BaseResponse(success=True, message=response)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

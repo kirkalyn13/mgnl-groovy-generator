@@ -1,9 +1,8 @@
-import string
 from fastapi import Request
 from config.logger import logger
 from config.settings import UNWANTED_RESPONSE_KEYWORDS, MAX_RETRIES
 
-def run(query: str, request: Request) -> str:
+def run(query: str, request: Request) -> {str, str}:
     try:
         logger.info(f"💬 Query: {query}")
         query_engine = request.app.state.query_engine
@@ -20,8 +19,7 @@ def run(query: str, request: Request) -> str:
 
             if not contains_unwanted(response):
                 logger.info("✅ Script generated successfully")
-                return response
-
+                return { "script": response, "retries": attempt - 1 }
             logger.warning(f"⚠️ Unwanted content detected on attempt {attempt}, retrying...")
 
         logger.error("‼️ Max retries reached, response still contains unwanted content")
