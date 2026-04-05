@@ -19,7 +19,7 @@ def setup_client() -> QdrantClient:
     )
 
 # Instantiate Vector Store
-def get_vector_store():
+def init_vector_store():
     print("⚙️  Setting up vector store...")
     client = setup_client()
 
@@ -33,10 +33,13 @@ def get_vector_store():
     )
 
 # Instantiate Query Engine
-def get_query_engine():
+def init_rag_engine():
     print("⚙️  Setting up query engine...")
 
-    vector_store = get_vector_store()
+    vector_store = init_vector_store()
     index = VectorStoreIndex.from_vector_store(vector_store)
     
-    return index.as_query_engine(similarity_top_k=TOP_K_SIMILARITY)
+    return {
+        "vector_store": vector_store,
+        "query_engine": index.as_query_engine(similarity_top_k=TOP_K_SIMILARITY)
+    }
