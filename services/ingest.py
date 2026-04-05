@@ -3,24 +3,27 @@ from llama_index.core import SimpleDirectoryReader, VectorStoreIndex, StorageCon
 from config.ollama import setup_ollama
 from config.logger import logger
 
-def run(vector_store) -> int:
+DEFAULT_PATH = "./data"
+
+# Run data ingest script
+def run(vector_store, path: str = DEFAULT_PATH) -> int:
     try:
         logger.info("❕ Starting data ingestion.")
     
-        # Setup models
-        setup_ollama()
+        # # Setup models
+        # setup_ollama()
 
-        # Load documents from /data
-        logger.info("⚙️ Loading data...")
-        documents = SimpleDirectoryReader("./data").load_data()
+        # # Load documents from /data
+        # logger.info("⚙️ Loading data...")
+        # documents = SimpleDirectoryReader(path).load_data()
 
-        # Create index (this embeds + stores)
-        logger.info("⚙️ Embedding and storing data...")
-        storage_context = StorageContext.from_defaults(vector_store=vector_store)
-        index = VectorStoreIndex.from_documents(
-            documents,
-            storage_context=storage_context,
-        )
+        # # Create index (this embeds + stores)
+        # logger.info("⚙️ Embedding and storing data...")
+        # storage_context = StorageContext.from_defaults(vector_store=vector_store)
+        # index = VectorStoreIndex.from_documents(
+        #     documents,
+        #     storage_context=storage_context,
+        # )
 
         logger.info("✅ Data ingested into Qdrant!")
 

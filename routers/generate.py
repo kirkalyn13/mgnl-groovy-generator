@@ -1,4 +1,5 @@
-from routers.base import router, QueryRequest, QueryResponse, limiter
+from routers.base import router, limiter
+from dtos.generate import QueryRequest, QueryResponse
 from fastapi import HTTPException, Request
 from services.generate import run
 

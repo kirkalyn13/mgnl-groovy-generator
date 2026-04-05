@@ -2,6 +2,7 @@ from fastapi import Request
 from config.logger import logger
 from config.settings import UNWANTED_RESPONSE_KEYWORDS, MAX_RETRIES
 
+# Run generate script query
 def run(query: str, request: Request) -> {str, str}:
     try:
         logger.info(f"💬 Query: {query}")
@@ -29,5 +30,7 @@ def run(query: str, request: Request) -> {str, str}:
         logger.error(f"‼️ Failed to generate script: {e}")
         raise
 
+# Validate response if it contains unwanted keywords
+# Keywords are usually edit syntax
 def contains_unwanted(text: str) -> bool:
     return any(word in text.lower() for word in UNWANTED_RESPONSE_KEYWORDS)
