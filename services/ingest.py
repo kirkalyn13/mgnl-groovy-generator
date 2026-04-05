@@ -1,21 +1,16 @@
 import os
 from llama_index.core import SimpleDirectoryReader, VectorStoreIndex, StorageContext
-from config.ollama import setup_ollama
 from config.logger import logger
+from config.settings import DEFAULT_DOCS_PATH, EXTENSIONS
 
-DEFAULT_PATH = "./data"
-
-def run(vector_store, path: str = DEFAULT_PATH) -> int:
+def run(vector_store, path: str = DEFAULT_DOCS_PATH) -> int:
     """Run data ingest script to Qdrant cluster"""
     try:
-        logger.info("❕ Starting data ingestion.")
-    
-        # Setup models
-        setup_ollama()
+        logger.info("🟢 Starting data ingestion.")
 
         # Load documents from /data
         logger.info("⚙️ Loading data...")
-        documents = SimpleDirectoryReader(path).load_data()
+        documents = SimpleDirectoryReader(path, required_exts=EXTENSIONS).load_data()
 
         # Create index (this embeds + stores)
         logger.info("⚙️ Embedding and storing data...")
@@ -25,9 +20,10 @@ def run(vector_store, path: str = DEFAULT_PATH) -> int:
             storage_context=storage_context,
         )
 
-        logger.info("✅ Data ingested into Qdrant!")
+        file_count = sum(1 for f in os.listdir("./data") if os.path.isfile(os.path.join("./data", f)) and any(f.endswith(ext) for ext in EXTENSIONS))
 
-        file_count = sum(1 for f in os.listdir("./data") if os.path.isfile(os.path.join("./data", f)))
+        logger.info(f"✅ Ingested {file_count} file(s) to Qdrant!")
+
         return file_count
     except Exception as e:
         logger.error(f"‼️ Data ingestion failed: {e}")

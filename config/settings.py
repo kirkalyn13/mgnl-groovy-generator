@@ -7,6 +7,8 @@ REQUEST_TIMEOUT = 120.0
 
 # Qdrant
 TOP_K_SIMILARITY = 3
+DEFAULT_DOCS_PATH = "./data"
+EXTENSIONS = [".groovy"]
 
 # Query Settings
 MAX_RETRIES = 3
