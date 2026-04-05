@@ -1,4 +1,5 @@
 import os
+from config.logger import log
 from dotenv import load_dotenv
 from llama_index.embeddings.ollama import OllamaEmbedding
 from llama_index.llms.ollama import Ollama
@@ -13,15 +14,15 @@ llm = os.getenv("OLLAMA_LLM")
 
 # Setup Ollama Configurations
 def setup_ollama():
-    print("⚙️ Setting up model...")
-    print(f"⚙️ LLM Base URL: {base_url}")
+    log.info("⚙️ Setting up model...")
+    log.info(f"⚙️ LLM Base URL: {base_url}")
 
     # Configure Ollama models
     Settings.embed_model = OllamaEmbedding(
         model_name=embedding_model,
         base_url=base_url,
     )
-    print(f"🤖 Embedding Model: {embedding_model}")
+    log.info(f"🤖 Embedding Model: {embedding_model}")
 
     Settings.llm = Ollama(
         model=llm,
@@ -29,4 +30,4 @@ def setup_ollama():
         request_timeout=REQUEST_TIMEOUT,
     )
 
-    print(f"🤖 Large Language Model: {llm}")
+    log.info(f"🤖 Large Language Model: {llm}")

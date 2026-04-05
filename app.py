@@ -5,6 +5,7 @@ import uvicorn
 from config.init import init
 from routers import generate
 from config.settings import HOST, PORT
+from config.logger import log
 
 load_dotenv()
 
@@ -15,11 +16,11 @@ async def lifespan(app: FastAPI):
     app.state.vector_store = qdrant["vector_store"]
     app.state.query_engine = qdrant["query_engine"]
 
-    print("✅ RAG engine ready")
+    log.info("✅ RAG engine ready")
     yield
 
     # Shutdown: clean up if needed
-    print("👋 Shutting down")
+    log.info("👋 Shutting down")
 
 app = FastAPI(title="Magnolia Groovy Script Generator", lifespan=lifespan)
 app.include_router(generate.router)

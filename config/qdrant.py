@@ -4,6 +4,7 @@ from llama_index.core import VectorStoreIndex
 from qdrant_client import QdrantClient
 from llama_index.vector_stores.qdrant import QdrantVectorStore
 from config.settings import TOP_K_SIMILARITY
+from config.logger import log
 
 # Setup envs
 load_dotenv()
@@ -20,11 +21,11 @@ def setup_client() -> QdrantClient:
 
 # Instantiate Vector Store
 def init_vector_store():
-    print("⚙️  Setting up vector store...")
+    log.info("⚙️  Setting up vector store...")
     client = setup_client()
 
-    print(f"🧰 QDrant Client URL: {url}")
-    print(f"🧰 Collection Name: {collection_name}")
+    log.info(f"🧰 QDrant Client URL: {url}")
+    log.info(f"🧰 Collection Name: {collection_name}")
 
     # Create and return vector store
     return QdrantVectorStore(
@@ -34,7 +35,7 @@ def init_vector_store():
 
 # Instantiate Query Engine
 def init_rag_engine():
-    print("⚙️  Setting up query engine...")
+    log.info("⚙️  Setting up query engine...")
 
     vector_store = init_vector_store()
     index = VectorStoreIndex.from_vector_store(vector_store)
