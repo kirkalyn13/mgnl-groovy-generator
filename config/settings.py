@@ -7,3 +7,7 @@ REQUEST_TIMEOUT = 120.0
 
 # Qdrant
 TOP_K_SIMILARITY = 3
+
+# Query Settings
+UNWANTED_RESPONSE_KEYWORDS = [".save"]
+MAX_RETRIES = 3
