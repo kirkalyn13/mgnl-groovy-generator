@@ -5,7 +5,10 @@ from services.generate import run
 from config.logger import logger
 from config.settings import EDIT_KEYWORDS, GROOVY_REQUEST_KEYWORDS, GROOVY_KEYWORDS
 
-@router.post("/generate", response_model=QueryResponse)
+@router.post("/generate",
+             response_model=QueryResponse,
+             summary="Generate Groovy scripts",
+             description="Generate Groovy scripts based from the specified query.")
 @limiter.limit("1/second")
 def generate(request: Request, body: QueryRequest):
     try:

@@ -3,7 +3,10 @@ from fastapi import HTTPException, Request
 from dtos.ingest import IngestRequest, IngestResponse
 from services.ingest import run
 
-@router.post("/ingest", response_model=IngestResponse)
+@router.post("/ingest", 
+             response_model=IngestResponse,
+             summary="Ingest Groovy scripts",
+             description="Loads and embeds Groovy scripts from the data folder into Qdrant.")
 @limiter.limit("1/second")
 def generate(request: Request, body: IngestRequest):
     try:
