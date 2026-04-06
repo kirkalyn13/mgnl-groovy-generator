@@ -1,10 +1,11 @@
 from contextlib import asynccontextmanager
 from dotenv import load_dotenv
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 from config.init import init
 from routers import register_routers
-from config.settings import HOST, PORT
+from config.settings import HOST, PORT, ALLOWED_ORIGINS
 from config.logger import logger
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
@@ -28,6 +29,14 @@ async def lifespan(app: FastAPI):
 
 # Init App
 app = FastAPI(title="Magnolia Groovy Script Generator", lifespan=lifespan)
+
+# CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=ALLOWED_ORIGINS,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Config Rate Limiting
 app.state.limiter = limiter

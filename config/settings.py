@@ -1,6 +1,7 @@
 # Server
 HOST = "0.0.0.0"
 PORT = 8000
+ALLOWED_ORIGINS = ["http://localhost:5173"]
 
 # Ollama
 REQUEST_TIMEOUT = 120.0
