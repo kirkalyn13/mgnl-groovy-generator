@@ -1,3 +1,4 @@
+import re
 from fastapi import Request
 from config.logger import logger
 from config.settings import UNWANTED_RESPONSE_KEYWORDS, MAX_RETRIES
@@ -20,7 +21,7 @@ def run(query: str, request: Request) -> {str, str}:
 
             if not contains_unwanted(response):
                 logger.info("✅ Script generated successfully")
-                return { "script": response, "retries": attempt - 1 }
+                return { "script": clean_script(response), "retries": attempt - 1 }
             logger.warning(f"⚠️ Unwanted content detected on attempt {attempt}, retrying...")
 
         logger.error("‼️ Max retries reached, response still contains unwanted content")
@@ -33,3 +34,7 @@ def run(query: str, request: Request) -> {str, str}:
 def contains_unwanted(text: str) -> bool:
     """Validate response if it contains unwanted keywords e.g edit keywords"""
     return any(word in text.lower() for word in UNWANTED_RESPONSE_KEYWORDS)
+
+def clean_script(response: str) -> str:
+    """Remove markdown code blocks from response."""
+    return re.sub(r"^```[\w]*\n?|```$", "", response.strip(), flags=re.MULTILINE).strip()
