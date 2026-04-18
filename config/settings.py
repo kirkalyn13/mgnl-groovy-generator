@@ -1,7 +1,7 @@
 # Server
 HOST = "0.0.0.0"
 PORT = 8000
-ALLOWED_ORIGINS = ["http://localhost:5173"]
+ALLOWED_ORIGINS = ["http://localhost:5173", "https://mgnl-groovy-generator-app.vercel.app"]
 
 # Ollama
 REQUEST_TIMEOUT = 120.0
