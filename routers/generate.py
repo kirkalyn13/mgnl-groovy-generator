@@ -13,6 +13,7 @@ from config.settings import EDIT_KEYWORDS, GROOVY_REQUEST_KEYWORDS, GROOVY_KEYWO
 def generate(request: Request, body: QueryRequest):
     try:
         query = body.query
+        properties = body.properties
 
         # Input guard rails
         if not is_groovy_request(query):
@@ -23,7 +24,7 @@ def generate(request: Request, body: QueryRequest):
             logger.warning(f"⚠️ Blocked modification query: {query}")
             raise HTTPException(status_code=400, detail="Modification scripts are not allowed.")
 
-        result = run(query, request)
+        result = run(query, properties, request)
         script = result["script"]
 
         # Output guard rails

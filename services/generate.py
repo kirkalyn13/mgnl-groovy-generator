@@ -3,15 +3,22 @@ from fastapi import Request
 from config.logger import logger
 from config.settings import UNWANTED_RESPONSE_KEYWORDS, MAX_RETRIES
 
-def run(query: str, request: Request) -> {str, str}:
+def run(query: str, properties: list[str], request: Request) -> {str, str}:
     """Run generate script query to Qdrant cluster"""
     try:
         logger.info(f"💬 Query: {query}")
         query_engine = request.app.state.query_engine
+
+        properties_clause = (
+        f"\nThe script must include the following properties: {', '.join(properties)}."
+        if properties else ""
+        )
+        
         prompt = f"""
         You are a Magnolia CMS Groovy script generator.
         Return ONLY the raw Groovy script with no explanations, no markdown, no code blocks.
-        
+        {properties_clause}
+
         Request: {query}
         """
 
