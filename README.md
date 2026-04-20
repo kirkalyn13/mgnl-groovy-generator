@@ -119,6 +119,7 @@ Generate a Magnolia CMS Groovy script from a natural language query.
 ```json
 {
   "query": "Generate a Groovy script to retrieve all published pages",
+  "workspaces": ["website"],
   "properties": ["pageTitle", "activationStatus", "path"]
 }
 ```
