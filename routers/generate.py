@@ -13,6 +13,7 @@ from config.settings import EDIT_KEYWORDS, GROOVY_REQUEST_KEYWORDS, GROOVY_KEYWO
 def generate(request: Request, body: QueryRequest):
     try:
         query = body.query
+        workspaces = body.workspaces
         properties = body.properties
 
         # Input guard rails
@@ -24,7 +25,7 @@ def generate(request: Request, body: QueryRequest):
             logger.warning(f"⚠️ Blocked modification query: {query}")
             raise HTTPException(status_code=400, detail="Modification scripts are not allowed.")
 
-        result = run(query, properties, request)
+        result = run(query, workspaces, properties, request)
         script = result["script"]
 
         # Output guard rails
