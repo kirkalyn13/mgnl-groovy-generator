@@ -3,7 +3,7 @@ from fastapi import HTTPException, Request
 from dtos.ingest import IngestRequest, IngestResponse
 from services.ingest import run
 
-@router.post("/ingest", 
+@router.post("/v1/ingest", 
              response_model=IngestResponse,
              summary="Ingest Groovy scripts",
              description="Loads and embeds Groovy scripts from the data folder into Qdrant.")

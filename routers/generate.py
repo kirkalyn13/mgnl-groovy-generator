@@ -5,7 +5,7 @@ from services.generate import run
 from config.logger import logger
 from config.settings import EDIT_KEYWORDS, GROOVY_REQUEST_KEYWORDS, GROOVY_KEYWORDS
 
-@router.post("/generate",
+@router.post("/v1/generate",
              response_model=QueryResponse,
              summary="Generate Groovy scripts",
              description="Generate Groovy scripts based from the specified query.")

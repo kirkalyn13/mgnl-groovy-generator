@@ -111,7 +111,7 @@ uvicorn app:app --reload --port 8000
  
 Interactive docs available at [http://localhost:8000/docs](http://localhost:8000/docs) once the server is running.
  
-### `POST /generate`
+### `POST /v1/generate`
  
 Generate a Magnolia CMS Groovy script from a natural language query.
  
@@ -135,7 +135,7 @@ Generate a Magnolia CMS Groovy script from a natural language query.
 }
 ```
  
-### `POST /ingest`
+### `POST /v1/ingest`
  
 Ingest `.groovy` files from the data folder into Qdrant.
  
