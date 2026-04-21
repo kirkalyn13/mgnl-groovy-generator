@@ -40,7 +40,7 @@ def generate(request: Request, body: QueryRequest):
         return QueryResponse(
             success=True,
             query=query,
-            response=script,
+            script=script,
             retries=result["retries"],
         )
     except HTTPException:

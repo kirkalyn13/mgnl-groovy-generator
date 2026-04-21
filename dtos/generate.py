@@ -6,7 +6,8 @@ class QueryRequest(BaseModel):
     properties: list[str] = []
 
 class QueryResponse(BaseModel):
+    success: bool
     query: str
-    response: str
+    script: str
     retries: int
     message: str | None = None

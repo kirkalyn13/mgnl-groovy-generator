@@ -129,7 +129,7 @@ Generate a Magnolia CMS Groovy script from a natural language query.
 {
   "success": true,
   "query": "Generate a Groovy script to retrieve all published pages",
-  "response": "def hm = MgnlContext.getHierarchyManager...",
+  "script": "def hm = MgnlContext.getHierarchyManager...",
   "retries": 0,
   "message": null
 }
