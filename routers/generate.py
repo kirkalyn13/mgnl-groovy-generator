@@ -11,7 +11,7 @@ from config.logger import logger
 @limiter.limit("1/second")
 def generate(request: Request, body: QueryRequest):
     try:
-        result = run(body.query, body.workspaces, body.properties, request)
+        result = run(request, body.query, body.workspaces, body.properties, body.allowModifications)
         return QueryResponse(
             success=True,
             query=body.query,

@@ -4,6 +4,7 @@ class QueryRequest(BaseModel):
     query: str
     workspaces: list[str] = []
     properties: list[str] = []
+    allowModifications: bool = False
 
 class QueryResponse(BaseModel):
     success: bool

@@ -54,7 +54,7 @@ A reference implementation is available in [`./integrations/magnolia`](./integra
 - Natural language to Groovy script generation
 - RAG pipeline grounded on example Magnolia CMS scripts
 - Expected properties input — tag-based field to guide script output
-- Input guard rails — blocks non-Groovy and modification requests
+- Input guard rails — blocks non-Groovy and modification requests, if disabled (default)
 - Output guard rails — validates and sanitizes generated scripts
 - Retry logic — automatically retries if output contains unwanted content
 - Rate limiting — 1 request per second per client
@@ -143,7 +143,8 @@ Generate a Magnolia CMS Groovy script from a natural language query.
 {
   "query": "Generate a Groovy script to retrieve all published pages",
   "workspaces": ["website"],
-  "properties": ["pageTitle", "activationStatus", "path"]
+  "properties": ["pageTitle", "activationStatus", "path"],
+  "allowModifications": false
 }
 ```
  

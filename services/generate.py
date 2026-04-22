@@ -4,7 +4,7 @@ from fastapi import Request
 from config.logger import logger
 from config.settings import MAX_RETRIES
 
-def run(query: str, workspaces: list[str], properties: list[str], request: Request) -> dict:
+def run(request: Request, query: str, workspaces: list[str], properties: list[str], allowModifications: bool) -> dict:
     """Run LLM-assisted groovy script generation"""
     try:
         logger.info(f"💬 Query: {query}")
@@ -19,7 +19,7 @@ def run(query: str, workspaces: list[str], properties: list[str], request: Reque
         if not validation.get("is_groovy_request"):
             raise ValueError(f"Not a Groovy request: {validation.get('reason')}")
 
-        if not validation.get("is_read_only"):
+        if not validation.get("is_read_only") and allowModifications != True:
             raise ValueError(f"Modification request blocked: {validation.get('reason')}")
 
         # Step 2 — Retrieve context
