@@ -1,0 +1,6 @@
+sections:
+  root:
+    groups:
+      edit:
+        items:
+          - generateScript

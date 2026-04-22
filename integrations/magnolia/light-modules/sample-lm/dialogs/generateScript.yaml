@@ -1,0 +1,32 @@
+label: Generate Groovy Script (AI-Assisted)
+form:
+  properties:
+    query:
+      $type: textField
+      description: Prompt for AI-assisted script generation
+      label: Query
+      rows: 5
+      required: true
+    workspaces:
+      $type: multiValueField
+      label: Workspaces
+      field:
+        $type: textField
+    properties:
+      $type: multiValueField
+      label: Preferred Properties
+      field:
+        $type: textField
+actions:
+  cancel:
+    $type: closeAction
+    availability:
+      multiple: true
+  commit:
+    label: Generate Script
+    $type: generateScriptAction
+footerLayout:
+  $type: defaultEditorActionLayout
+  primaryActions:
+    cancel: cancel
+    commit: commit
