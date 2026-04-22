@@ -14,6 +14,26 @@ Magnolia Groovy Generator is a full-stack portfolio project that combines a Fast
 
 
 
+## Magnolia CMS Integration
+
+Beyond the web UI, the generator can be integrated directly into Magnolia CMS as a **custom action** — allowing editors and developers to generate and execute Groovy scripts without leaving the CMS.
+
+![Magnolia Integration Demo](./assets/mgnl-demo.gif)
+
+### Sample Code
+
+A reference implementation is available in [`./integrations/magnolia`](./integrations/magnolia), including:
+
+- Custom action class calling the `/v1/generate` endpoint
+- Action definition YAML for registering the action in a Magnolia app
+
+### Prerequisites
+
+- Magnolia CMS 6.3.x+
+- The FastAPI backend running and accessible from the Magnolia instance
+- `magnolia.groovyGenerator.url` configured in your Magnolia properties file
+
+
 ## Tech Stack
 
 | Layer | Technology |
