@@ -35,7 +35,7 @@ def init_vector_store():
         collection_name=collection_name,
     )
 
-def init_rag_engine():
+def init_rag_engine(llm):
     """Instantiate Vector Store and Query Engine"""
     logger.info("⚙️  Setting up query engine...")
 
@@ -44,5 +44,6 @@ def init_rag_engine():
     
     return {
         "vector_store": vector_store,
-        "query_engine": index.as_query_engine(similarity_top_k=TOP_K_SIMILARITY)
+        "query_engine": index.as_query_engine(similarity_top_k=TOP_K_SIMILARITY),
+        "llm": llm
     }

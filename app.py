@@ -18,8 +18,10 @@ limiter = Limiter(key_func=get_remote_address)
 async def lifespan(app: FastAPI):
     # Startup: runs once when the app starts
     qdrant = init()
+
     app.state.vector_store = qdrant["vector_store"]
     app.state.query_engine = qdrant["query_engine"]
+    app.state.llm = qdrant["llm"]
 
     logger.info("✅ RAG engine ready")
     yield

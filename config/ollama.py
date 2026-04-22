@@ -31,3 +31,5 @@ def setup_ollama():
     )
 
     logger.info(f"🤖 Large Language Model: {llm}")
+
+    return Settings.llm
