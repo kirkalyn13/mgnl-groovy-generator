@@ -64,7 +64,7 @@ public class GenerateScriptAction extends CommitAction<GenerateScriptActionDefin
      */
     @Inject
     public GenerateScriptAction(
-            CommitActionDefinition definition,
+            GenerateScriptActionDefinition definition,
             CloseHandler closeHandler,
             ValueContext<GenerateScriptActionDefinition> valueContext,
             FormView<GenerateScriptActionDefinition> form,
@@ -91,8 +91,9 @@ public class GenerateScriptAction extends CommitAction<GenerateScriptActionDefin
             String query = form.getPropertyValue(QUERY_PROPERTY).orElseThrow().toString();
             List<String> workspaces = form.getPropertyValue(WORKSPACES_PROPERTY).stream().map(Object::toString).toList();
             List<String> properties = form.getPropertyValue(PROPERTIES_PROPERTY).stream().map(Object::toString).toList();
+            Boolean allowModifications = ((GenerateScriptActionDefinition) this.getDefinition()).getAllowModifications();
 
-            GenerateResponse response = sendGenerateRequest(query, workspaces, properties);
+            GenerateResponse response = sendGenerateRequest(query, workspaces, properties, allowModifications);
             saveGeneratedScript(response.script());
             String resultMessage = String.format("Successfully Generated Script: \n %s", response.script());
             messages.sendLocalMessage(new Message(MessageType.INFO, "Script Generated", resultMessage));
@@ -107,10 +108,11 @@ public class GenerateScriptAction extends CommitAction<GenerateScriptActionDefin
      * @param query      Natural language query describing the desired script.
      * @param workspaces List of JCR workspace name to scope the script to.
      * @param properties List of JCR property names relevant to the query.
+     * @param allowModifications boolean to specify if modification script requests are allowed.
      * @return Parsed {@link GenerateResponse} from the API.
      */
-    private GenerateResponse sendGenerateRequest(String query, List<String> workspaces, List<String> properties) throws IOException, InterruptedException {
-        GenerateRequest requestBody = new GenerateRequest(query, workspaces, properties);
+    private GenerateResponse sendGenerateRequest(String query, List<String> workspaces, List<String> properties, Boolean allowModifications) throws IOException, InterruptedException {
+        GenerateRequest requestBody = new GenerateRequest(query, workspaces, properties, allowModifications);
         String body = new ObjectMapper().writeValueAsString(requestBody);
 
         HttpRequest request = HttpRequest.newBuilder()
@@ -174,7 +176,7 @@ public class GenerateScriptAction extends CommitAction<GenerateScriptActionDefin
     }
 
     /** Request payload sent to the generator API. */
-    private record GenerateRequest(String query, List<String> workspaces, List<String> properties) {}
+    private record GenerateRequest(String query, List<String> workspaces, List<String> properties, Boolean allowModifications) {}
 
     /** Response payload received from the generator API. */
     private record GenerateResponse(boolean success, String query, String script, int retries) {}

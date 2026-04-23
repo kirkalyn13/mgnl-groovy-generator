@@ -25,6 +25,7 @@ actions:
   commit:
     label: Generate Script
     $type: generateScriptAction
+    allowModifications: false
 footerLayout:
   $type: defaultEditorActionLayout
   primaryActions:
