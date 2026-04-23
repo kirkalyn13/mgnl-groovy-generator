@@ -6,15 +6,11 @@ Live Site: [mgnl-groovy-generator-app](https://mgnl-groovy-generator-app.vercel.
 
 ![Demo](./assets/app-demo.gif)
 
-
-
 ## Overview
 
 Magnolia Groovy Generator is a full-stack portfolio project that combines a FastAPI backend with a React + Vite frontend to generate context-aware Groovy scripts for Magnolia CMS. It uses Retrieval-Augmented Generation (RAG) to ground script generation on a curated set of example scripts, ensuring outputs are accurate and idiomatic.
 
-
-
-## Magnolia CMS Integration
+## [`Magnolia CMS Integration`](./integrations/magnolia/INTEGRATION.md)
 
 Beyond the web UI, the generator can be integrated directly into Magnolia CMS as a **custom action** — allowing editors and developers to generate and execute Groovy scripts without leaving the CMS.
 
@@ -33,11 +29,10 @@ A reference implementation is available in [`./integrations/magnolia`](./integra
 - The FastAPI backend running and accessible from the Magnolia instance
 - `magnolia.groovyGenerator.url` configured in your Magnolia properties file
 
-
 ## Tech Stack
 
 | Layer | Technology |
-|---|---|
+|||
 | Frontend | React, Vite, Tailwind CSS |
 | Backend | FastAPI, Python |
 | LLM & Embeddings | Ollama (`mistral`, `nomic-embed-text`) |
@@ -60,16 +55,11 @@ A reference implementation is available in [`./integrations/magnolia`](./integra
 - Rate limiting — 1 request per second per client
 - Fully local — runs entirely on your machine with no cloud API required
 
----
-
-
 ## Prerequisites
 
 - Python 3.11+
 - Node.js 18+
 - [Ollama](https://ollama.com) installed and running
-
----
 
 ## Getting Started
  
@@ -126,9 +116,6 @@ python ingest.py
 ```bash
 uvicorn app:app --reload --port 8000
 ```
- 
- 
----
  
 ## API Reference
  
