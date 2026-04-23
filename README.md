@@ -165,10 +165,24 @@ Ingest `.groovy` files from the data folder into Qdrant.
 }
 ```
 
+### `GET /v1/describe/{script_path}` *(EXPERIMENTAL)*
+ 
+Describes the groovy script pull from `/{script_path}` from a Magnolia CMS instance
+This is an expiremental API to integrate tool calling functionality with the groovy script use case.
+ 
+**Response**
+```json
+{
+    "success": true,
+    "path": "magnoliaModulesDependencies",
+    "description": "This Groovy script is a utility for inspecting Magnolia module dependencies and version information..."
+}
+```
+
 ## Improvements
 
+- Use a larger, more powerful model e.g. OpenAI gpt models
 - Ingest more well-documented and labeled Groovy scripts.
-
 
 ## Authors
 
