@@ -1,3 +1,4 @@
+from config.settings import RATE_LIMIT
 from routers.base import router, limiter
 from fastapi import HTTPException, Request
 from dtos.ingest import IngestRequest, IngestResponse
@@ -7,7 +8,7 @@ from services.ingest import run
              response_model=IngestResponse,
              summary="Ingest Groovy scripts",
              description="Loads and embeds Groovy scripts from the data folder into Qdrant.")
-@limiter.limit("1/second")
+@limiter.limit(RATE_LIMIT)
 def generate(request: Request, body: IngestRequest):
     try:
         path = body.path

@@ -1,3 +1,4 @@
+from config.settings import RATE_LIMIT
 from routers.base import router, limiter
 from dtos.generate import QueryRequest, QueryResponse
 from fastapi import HTTPException, Request
@@ -8,7 +9,7 @@ from config.logger import logger
              response_model=QueryResponse,
              summary="Generate Groovy scripts",
              description="Generate Groovy scripts based from the specified query.")
-@limiter.limit("1/second")
+@limiter.limit(RATE_LIMIT)
 def generate(request: Request, body: QueryRequest):
     try:
         result = run(request, body.query, body.workspaces, body.properties, body.allowModifications)
