@@ -7,7 +7,6 @@ from config.settings import REQUEST_TIMEOUT
 
 load_dotenv()
 MAGNOLIA_URL = os.getenv("MAGNOLIA_SCRIPTS_REST_DELIVERY_URL")
-LLM = os.getenv("TOOL_CALL_LLM", "qwen3")
 MAGNOLIA_USERNAME = os.getenv("MAGNOLIA_USERNAME", "superuser")
 MAGNOLIA_PASSWORD = os.getenv("MAGNOLIA_PASSWORD", "superuser")
 

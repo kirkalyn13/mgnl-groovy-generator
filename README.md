@@ -167,10 +167,22 @@ Ingest `.groovy` files from the data folder into Qdrant.
 }
 ```
 
-### `GET /v1/describe/{script_path}` *(EXPERIMENTAL)*
+### `GET /v1/review/{script_path}`
+ 
+Reviews the groovy script pulled from `/{script_path}` from a Magnolia CMS instance.
+ 
+**Response**
+```json
+{
+    "success": true,
+    "path": "magnoliaModulesDependencies",
+    "review": "Here's a code review for the provided Magnolia CMS Groovy script:\n\n1. **Naming Conventions**: Adhere to consistent naming conventions throughout the script..."
+}
+```
+
+### `GET /v1/describe/{script_path}`
  
 Describes the groovy script pull from `/{script_path}` from a Magnolia CMS instance.
-This is an expiremental API to integrate LangChain and tool calling functionality with the groovy script use case.
  
 **Response**
 ```json

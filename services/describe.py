@@ -1,7 +1,7 @@
 from config.logger import logger
 from langchain_ollama import ChatOllama
 from langchain.agents import create_agent
-from tools.describe import TOOLS
+from tools.script import TOOLS
 
 def run(script_path: str) -> str:
     """Describe a Groovy script based on its path in Magnolia."""

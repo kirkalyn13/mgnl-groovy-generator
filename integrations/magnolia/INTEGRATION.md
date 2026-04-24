@@ -71,3 +71,19 @@ sections:
 - `allowModifications: false` is set on the action definition — the API will reject any query that attempts to modify, delete, or update content
 - The generated script node is named with a `generated-script-` prefix and a timestamp to ensure uniqueness
 - The action has a 120 second timeout to account for local LLM generation time
+
+## Other Integrations
+
+### Groovy Script Code Review API: `GET /v1/review/{script_path}`
+
+Reviews the groovy script pulled from `/{script_path}` from a Magnolia CMS instance, which could potentially be integrated to a custom action.
+
+> Scripts should be exposed via REST Delivery and the request URL is specified in the `.env` file
+
+```json
+{
+    "success": true,
+    "path": "magnoliaModulesDependencies",
+    "description": "Here's a code review for the provided Magnolia CMS Groovy script:\n\n1. **Naming Conventions**: Adhere to consistent naming conventions throughout the script..."
+}
+```
