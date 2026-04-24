@@ -13,7 +13,7 @@ from config.logger import logger
 @limiter.limit(RATE_LIMIT)
 def describe(request: Request, script_path: str):
     try:
-        result = run(request, script_path)
+        result = run(script_path)
         return DescribeResponse(
             success=True,
             path=script_path,

@@ -1,10 +1,11 @@
 import os
 import httpx
-from fastapi import Request
 from dotenv import load_dotenv
-from ollama import chat
 from config.logger import logger
 from config.settings import REQUEST_TIMEOUT
+from langchain_core.tools import tool
+from langchain_ollama import ChatOllama
+from langchain.agents import create_agent
 
 load_dotenv()
 MAGNOLIA_URL = os.getenv("MAGNOLIA_SCRIPTS_REST_DELIVERY_URL")
@@ -12,6 +13,8 @@ LLM = os.getenv("TOOL_CALL_LLM", "qwen3")
 MAGNOLIA_USERNAME = os.getenv("MAGNOLIA_USERNAME", "superuser")
 MAGNOLIA_PASSWORD = os.getenv("MAGNOLIA_PASSWORD", "superuser")
 
+
+@tool
 def fetch_script(script_path: str) -> str:
     """Fetch a Groovy script from the Magnolia REST delivery API.
 
@@ -40,32 +43,21 @@ def fetch_script(script_path: str) -> str:
 
     return text
 
-
-def run(request: Request, script_path: str) -> str:
+def run(script_path: str) -> str:
     """Describe a Groovy script based on its path in Magnolia."""
-    messages = [{"role": "user", "content": f"Fetch and explain the Groovy script at path: {script_path}"}]
+    try:
+        llm = ChatOllama(model="qwen3", temperature=0)
+        messages = [{"role": "user", "content": f"Fetch and explain the Groovy script at path: {script_path}"}]
 
-    response = chat(model=LLM, messages=messages, tools=[fetch_script], think=True)
-    messages.append(response.message)
+        agent = create_agent(
+            model=llm,
+            tools=[fetch_script]
+        )
 
-    if response.message.tool_calls:
-        call = response.message.tool_calls[0]
-        logger.info(f"🔧 Tool called: {call.function.name} with args: {call.function.arguments}")
+        logger.info(f"💬 Describe groovy script from path {script_path}")
+        response = agent.invoke({"messages": messages})
 
-        try:
-            result = fetch_script(**call.function.arguments)
-        except Exception as e:
-            logger.error(f"‼️ Tool execution failed: {e}")
-            raise
-
-        messages.append({
-            "role": "tool",
-            "tool_name": call.function.name,
-            "content": result
-        })
-
-        final_response = chat(model=LLM, messages=messages, think=True)
-
-        return final_response.message.content
-
-    return response.message.content
+        return response["messages"][-1].content
+    except Exception as e:
+        logger.error(f"‼️ Describe execution failed: {e}")
+        raise
