@@ -3,6 +3,7 @@
 This module integrates the Magnolia Groovy Generator API into Magnolia CMS as a custom action, allowing developers to generate and save Groovy scripts directly from the Magnolia admincentral without leaving the CMS.
 
 ![Magnolia Integration Demo](../../assets/mgnl-demo.gif)
+[▶ Watch Demo](https://drive.google.com/file/d/12dixAMERaaCbuTUxM14ih4Z9g-1qXISh/view?usp=sharing)
 
 ## Dialog
 
