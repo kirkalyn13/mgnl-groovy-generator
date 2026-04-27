@@ -7,7 +7,7 @@ from tools.script import TOOLS
 
 load_dotenv()
 REVIEW_LLM = os.getenv("OLLAMA_LLM", "mistral")
-TOOL_LLM = os.getenv("TOOL_CALL_LLM", "qwen3")
+TOOL_LLM = os.getenv("TOOL_CALL_LLM", "qwen3.5")
 
 
 def run(script_path: str) -> str:
