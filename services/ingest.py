@@ -3,7 +3,7 @@ from llama_index.core import SimpleDirectoryReader, VectorStoreIndex, StorageCon
 from config.logger import logger
 from config.settings import DEFAULT_DOCS_PATH, EXTENSIONS
 
-def run(vector_store, path: str = DEFAULT_DOCS_PATH) -> int:
+def run_ingest(vector_store, path: str = DEFAULT_DOCS_PATH) -> int:
     """Run data ingest script to Qdrant cluster"""
     try:
         logger.info("🟢 Starting data ingestion.")

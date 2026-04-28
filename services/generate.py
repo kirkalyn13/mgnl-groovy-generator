@@ -4,7 +4,7 @@ from fastapi import Request
 from config.logger import logger
 from config.settings import MAX_RETRIES
 
-def run(request: Request, query: str, workspaces: list[str], properties: list[str], allowModifications: bool) -> dict:
+def run_generate(request: Request, query: str, workspaces: list[str], properties: list[str], allowModifications: bool) -> dict:
     """Run LLM-assisted groovy script generation"""
     try:
         logger.info(f"💬 Query: {query}")

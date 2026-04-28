@@ -1,12 +1,17 @@
+import os
+from dotenv import load_dotenv
 from config.logger import logger
 from langchain_ollama import ChatOllama
 from langchain.agents import create_agent
 from tools.script import TOOLS
 
-def run(script_path: str) -> str:
+load_dotenv()
+TOOL_LLM = os.getenv("TOOL_CALL_LLM", "qwen3.5")
+
+def run_describe(script_path: str) -> str:
     """Describe a Groovy script based on its path in Magnolia."""
     try:
-        llm = ChatOllama(model="qwen3", temperature=0)
+        llm = ChatOllama(model=TOOL_LLM, temperature=0)
         messages = [{"role": "user", "content": f"Fetch and explain the Groovy script at path: {script_path}"}]
 
         agent = create_agent(
