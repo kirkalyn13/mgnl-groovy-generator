@@ -18,7 +18,7 @@ The dialog (`generateScript.yaml`) exposes three fields:
 
 ## Action
 
-`GenerateScriptAction.java` extends Magnolia's `CommitAction` and:
+[`GenerateScriptAction.java`](./core/actions/GenerateScriptAction.java) extends Magnolia's `CommitAction` and:
 
 - Reads field values from the dialog form
 - Sends a `POST` request to the configured generator API
@@ -74,16 +74,32 @@ sections:
 
 ## Other Integrations
 
-### Groovy Script Code Review API: `GET /v1/review/{script_path}`
+### Groovy Script Code Review API
 
-Reviews the groovy script pulled from `/{script_path}` from a Magnolia CMS instance, which could potentially be integrated to a custom action.
+[`ReviewScriptAction.java`](./core/actions/ReviewScriptAction.java) extends Magnolia's `AbstractAction` and:
 
-> Scripts should be exposed via REST Delivery and the request URL is specified in the `.env` file
+- Sends a `GET` request to review the groovy script pulled from `/{script_path}`
+- Sends a Magnolia message bar notification on success and review details
 
+> Scripts should be exposed via REST Delivery (see [scripts REST Delivery config](./light-modules/sample-lm/restEndpoints/delivery/scripts_v1.yaml)) and the request URL is specified in the `.env` file
+
+### Sample Response consumed from `GET /v1/scripts/review/{script_path}`:
 ```json
 {
     "success": true,
     "path": "magnoliaModulesDependencies",
     "description": "Here's a code review for the provided Magnolia CMS Groovy script:\n\n1. **Naming Conventions**: Adhere to consistent naming conventions throughout the script..."
 }
+```
+
+### Action Definition:
+```yaml
+reviewScript:
+  label: Review Script
+  icon: icon-instant_preview
+  $type: reviewScriptAction
+  availability:
+    writePermissionRequired: true
+    nodeTypes:
+      - mgnl:content
 ```
