@@ -10,7 +10,7 @@ REVIEW_LLM = os.getenv("OLLAMA_LLM", "mistral")
 TOOL_LLM = os.getenv("TOOL_CALL_LLM", "qwen3.5")
 
 
-def run(script_path: str) -> str:
+def run_review(script_path: str) -> str:
     """Review a Groovy script based on its path in Magnolia."""
     try:
         logger.info(f"💬 Reviewing groovy script from path: {script_path}")
