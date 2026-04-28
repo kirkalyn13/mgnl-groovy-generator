@@ -12,7 +12,6 @@ import info.magnolia.ui.api.message.Message;
 import info.magnolia.ui.api.message.MessageType;
 import info.magnolia.ui.contentapp.Datasource;
 import info.magnolia.ui.contentapp.action.CommitAction;
-import info.magnolia.ui.contentapp.action.CommitActionDefinition;
 import info.magnolia.ui.editor.FormView;
 import info.magnolia.ui.framework.message.MessagesManager;
 import info.magnolia.ui.observation.DatasourceObservation;
@@ -39,6 +38,7 @@ public class GenerateScriptAction extends CommitAction<GenerateScriptActionDefin
     private final FormView<GenerateScriptActionDefinition> form;
     private final MessagesManager messages;
     private final MagnoliaConfigurationProperties mcp;
+    private static final String GENERATE_PATH = "/v1/scripts/generate";
     private static final String GROOVY_WORKSPACE = "scripts";
     private static final String SCRIPT_NODE_TYPE = "mgnl:content";
     private static final String GROOVY_GENERATOR_PROPERTY = "magnolia.groovyGenerator.url";
@@ -172,7 +172,7 @@ public class GenerateScriptAction extends CommitAction<GenerateScriptActionDefin
      * @return Generator URL string.
      */
     private String getGeneratorUrl() {
-        return mcp.getProperty(GROOVY_GENERATOR_PROPERTY);
+        return mcp.getProperty(GROOVY_GENERATOR_PROPERTY) + GENERATE_PATH;
     }
 
     /** Request payload sent to the generator API. */

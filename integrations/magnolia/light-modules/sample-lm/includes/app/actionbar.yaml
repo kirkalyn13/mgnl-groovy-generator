@@ -4,3 +4,4 @@ sections:
       edit:
         items:
           - generateScript
+          - reviewScript

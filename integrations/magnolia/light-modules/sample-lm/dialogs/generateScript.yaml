@@ -10,11 +10,13 @@ form:
     workspaces:
       $type: multiValueField
       label: Workspaces
+      required: true
       field:
         $type: textField
     properties:
       $type: multiValueField
       label: Preferred Properties
+      required: true
       field:
         $type: textField
 actions:

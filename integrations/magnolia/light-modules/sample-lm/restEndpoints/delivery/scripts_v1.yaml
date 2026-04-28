@@ -1,0 +1,4 @@
+$type: jcrDeliveryEndpoint_v2
+workspace: scripts
+nodeTypes:
+  - mgnl:content
