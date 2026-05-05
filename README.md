@@ -118,7 +118,16 @@ python ingest.py
 ```bash
 uvicorn app:app --reload --port 8000
 ```
+
+## Run with Docker
  
+```bash
+docker build -t magnolia-rag-backend .
+docker run -p 8000:8000 --env-file .env magnolia-rag-backend
+```
+ 
+> **Note:** Make sure to set `OLLAMA_URL=http://host.docker.internal:11434` in your `.env` file.
+
 ## API Reference
  
 Interactive docs available at [http://localhost:8000/docs](http://localhost:8000/docs) once the server is running.
