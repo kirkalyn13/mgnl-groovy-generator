@@ -38,7 +38,7 @@ jobs:
       - name: Type check with mypy
         run: |
           pip install mypy
-          mypy . --ignore-missing-imports --exclude .venv
+          mypy . --ignore-missing-imports --explicit-package-bases --exclude .venv
 
       - name: Import check
         run: python -c "import app"
