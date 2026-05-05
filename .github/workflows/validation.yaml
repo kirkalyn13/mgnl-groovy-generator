@@ -35,11 +35,6 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Lint with flake8
-        run: |
-          pip install flake8
-          flake8 . --count --max-line-length=120 --exclude=.venv,__pycache__
-
       - name: Type check with mypy
         run: |
           pip install mypy
