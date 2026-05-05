@@ -1,5 +1,6 @@
+from config.auth import verify_api_key
 from config.settings import RATE_LIMIT
-from fastapi import HTTPException, Request
+from fastapi import HTTPException, Request, Depends
 from routers.base import router, limiter
 from dtos.generate import QueryRequest, QueryResponse
 from dtos.ingest import IngestRequest, IngestResponse
@@ -12,9 +13,10 @@ from services.describe import run_describe
 from config.logger import logger
 
 @router.post("/v1/scripts/generate",
-             response_model=QueryResponse,
-             summary="Generate Groovy scripts",
-             description="Generate Groovy scripts based from the specified query.")
+    response_model=QueryResponse,
+    summary="Generate Groovy scripts",
+    description="Generate Groovy scripts based from the specified query.",
+    dependencies=[Depends(verify_api_key)])
 @limiter.limit(RATE_LIMIT)
 def generate(request: Request, body: QueryRequest):
     """Router for script generation"""
@@ -36,9 +38,10 @@ def generate(request: Request, body: QueryRequest):
         raise HTTPException(status_code=500, detail=str(e))
     
 @router.post("/v1/scripts/ingest", 
-             response_model=IngestResponse,
-             summary="Ingest Groovy scripts",
-             description="Loads and embeds Groovy scripts from the data folder into Qdrant.")
+    response_model=IngestResponse,
+    summary="Ingest Groovy scripts",
+    description="Loads and embeds Groovy scripts from the data folder into Qdrant.",
+    dependencies=[Depends(verify_api_key)])
 @limiter.limit(RATE_LIMIT)
 def ingest(request: Request, body: IngestRequest):
     """Router for scripts document ingestion"""
@@ -56,6 +59,7 @@ def ingest(request: Request, body: IngestRequest):
     response_model=ReviewResponse,
     summary="Review an existing Groovy script from a Magnolia instance",
     description="Returns a natural language code review of a Groovy script at the given path.",
+    dependencies=[Depends(verify_api_key)]
 )
 @limiter.limit(RATE_LIMIT)
 def review(request: Request, script_path: str):
@@ -77,8 +81,9 @@ def review(request: Request, script_path: str):
     
 @router.get("/v1/scripts/describe/{script_path:path}",
     response_model=DescribeResponse,
-    summary="*Experimental* Describe an existing Groovy script from a Magnolia instance",
+    summary="Describe an existing Groovy script from a Magnolia instance",
     description="Returns a natural language description of a Groovy script at the given path.",
+    dependencies=[Depends(verify_api_key)]
 )
 @limiter.limit(RATE_LIMIT)
 def describe(request: Request, script_path: str):

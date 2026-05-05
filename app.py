@@ -4,6 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 from config.init import init
+from config.openapi import custom_openapi
 from routers import register_routers
 from config.settings import HOST, PORT, ALLOWED_ORIGINS
 from config.logger import logger
@@ -43,6 +44,9 @@ app.add_middleware(
 # Config Rate Limiting
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+# OpenAPI config
+app.openapi = lambda: custom_openapi(app)
 
 # Register routers
 register_routers(app)
