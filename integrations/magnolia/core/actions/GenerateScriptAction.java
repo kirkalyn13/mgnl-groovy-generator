@@ -3,8 +3,9 @@ package com.sample.cms.actions;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import info.magnolia.cms.security.SecurityUtil;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.init.MagnoliaConfigurationProperties;
+import info.magnolia.jcr.util.PropertyUtil;
 import info.magnolia.ui.CloseHandler;
 import info.magnolia.ui.ValueContext;
 import info.magnolia.ui.api.action.ActionExecutionException;
@@ -37,11 +38,13 @@ public class GenerateScriptAction extends CommitAction<GenerateScriptActionDefin
 
     private final FormView<GenerateScriptActionDefinition> form;
     private final MessagesManager messages;
-    private final MagnoliaConfigurationProperties mcp;
+    private static final String GROOVY_GENERATOR_PATH = "/groovy-generator/url";
+    private static final String API_KEY_PATH = "/groovy-generator/api-key";
     private static final String GENERATE_PATH = "/v1/scripts/generate";
     private static final String GROOVY_WORKSPACE = "scripts";
+    private static final String KEYSTORE_WORKSPACE = "keystore";
     private static final String SCRIPT_NODE_TYPE = "mgnl:content";
-    private static final String GROOVY_GENERATOR_PROPERTY = "magnolia.groovyGenerator.url";
+    private static final String PASSWORD_PROPERTY = "encryptedValue";
     private static final String QUERY_PROPERTY = "query";
     private static final String WORKSPACES_PROPERTY = "workspaces";
     private static final String PROPERTIES_PROPERTY = "properties";
@@ -60,7 +63,6 @@ public class GenerateScriptAction extends CommitAction<GenerateScriptActionDefin
      * @param datasource            Datasource bound to the content app.
      * @param datasourceObservation Triggers UI refresh after datasource changes.
      * @param messages              Sends notifications to the Magnolia message bar.
-     * @param mcp                   Provides access to Magnolia configuration properties.
      */
     @Inject
     public GenerateScriptAction(
@@ -70,12 +72,10 @@ public class GenerateScriptAction extends CommitAction<GenerateScriptActionDefin
             FormView<GenerateScriptActionDefinition> form,
             Datasource<GenerateScriptActionDefinition> datasource,
             DatasourceObservation.Manual datasourceObservation,
-            MessagesManager messages,
-            MagnoliaConfigurationProperties mcp) {
+            MessagesManager messages) {
         super(definition, closeHandler, valueContext, form, datasource, datasourceObservation);
         this.form = form;
         this.messages = messages;
-        this.mcp = mcp;
     }
 
     /**
@@ -111,13 +111,14 @@ public class GenerateScriptAction extends CommitAction<GenerateScriptActionDefin
      * @param allowModifications boolean to specify if modification script requests are allowed.
      * @return Parsed {@link GenerateResponse} from the API.
      */
-    private GenerateResponse sendGenerateRequest(String query, List<String> workspaces, List<String> properties, Boolean allowModifications) throws IOException, InterruptedException {
+    private GenerateResponse sendGenerateRequest(String query, List<String> workspaces, List<String> properties, Boolean allowModifications) throws IOException, InterruptedException, RepositoryException {
         GenerateRequest requestBody = new GenerateRequest(query, workspaces, properties, allowModifications);
         String body = new ObjectMapper().writeValueAsString(requestBody);
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(getGeneratorUrl()))
                 .header("Content-Type", "application/json")
+                .header("X-API-Key", getKeystoreValue(API_KEY_PATH))
                 .timeout(Duration.ofSeconds(REQUEST_TIMEOUT))
                 .POST(HttpRequest.BodyPublishers.ofString(body, StandardCharsets.UTF_8))
                 .build();
@@ -167,12 +168,25 @@ public class GenerateScriptAction extends CommitAction<GenerateScriptActionDefin
     }
 
     /**
-     * Retrieves the generator API URL from Magnolia configuration properties.
+     * Retrieves and decrypts the groovy generator keystore values.
+     *
+     * @return the decrypted keystore value
+     */
+    private static String getKeystoreValue(String path) throws RepositoryException {
+        Session session = MgnlContext.getJCRSession(KEYSTORE_WORKSPACE);
+        Node tokenNode = session.getNode(path);
+        String encryptedToken = PropertyUtil.getString(tokenNode, PASSWORD_PROPERTY);
+
+        return SecurityUtil.decrypt(encryptedToken);
+    }
+
+    /**
+     * Retrieves the generator API URL from keystore then appends generate path
      *
      * @return Generator URL string.
      */
-    private String getGeneratorUrl() {
-        return mcp.getProperty(GROOVY_GENERATOR_PROPERTY) + GENERATE_PATH;
+    private String getGeneratorUrl() throws RepositoryException {
+        return getKeystoreValue(GROOVY_GENERATOR_PATH) + GENERATE_PATH;
     }
 
     /** Request payload sent to the generator API. */

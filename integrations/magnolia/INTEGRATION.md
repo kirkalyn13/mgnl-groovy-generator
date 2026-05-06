@@ -29,11 +29,10 @@ The dialog (`generateScript.yaml`) exposes three fields:
 
 ## Configuration
 
-Add the generator API URL to your Magnolia configuration properties file:
+Add the groovy generator API URL and API Key to the Passwords app with the following paths, respectively:
 
-```properties
-magnolia.groovyGenerator.url=http://localhost:8000/v1/generate
-```
+- `/groovy-generator/url` = `http://localhost:8000`
+- `/groovy-generator/api-key` = `<api-key-value>`
 
 For a deployed environment, replace `localhost:8000` with the URL of your hosted FastAPI instance.
 
