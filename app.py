@@ -4,6 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 from config.init import init
+from config.langfuse import init_langfuse
 from config.openapi import custom_openapi
 from routers import register_routers
 from config.settings import HOST, PORT, ALLOWED_ORIGINS
@@ -18,6 +19,7 @@ limiter = Limiter(key_func=get_remote_address)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup: runs once when the app starts
+    init_langfuse()
     qdrant = init()
 
     app.state.vector_store = qdrant["vector_store"]

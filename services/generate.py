@@ -1,57 +1,66 @@
 import re
 import json
 from fastapi import Request
+from langfuse.llama_index import LlamaIndexInstrumentor
 from config.logger import logger
 from config.settings import MAX_RETRIES
 
+instrumentor = LlamaIndexInstrumentor()
+
 def run_generate(request: Request, query: str, workspaces: list[str], properties: list[str], allowModifications: bool) -> dict:
     """Run LLM-assisted groovy script generation"""
-    try:
-        logger.info(f"💬 Query: {query}")
-        llm = request.app.state.llm
-        query_engine = request.app.state.query_engine
+    with instrumentor.observe(
+        user_id="api-user",
+        session_id=query[:20],
+        tags=["generate", "groovy"]
+    ):
+        try:
+            logger.info(f"💬 Query: {query}")
+            llm = request.app.state.llm
+            query_engine = request.app.state.query_engine
 
-        # Step 1 — Validate request
-        logger.info("🔎 Validating request...")
-        validation = validate_request(query, llm)
-        logger.info(f"🔎 Validation result: {validation}")
+            # Step 1 — Validate request
+            logger.info("🔎 Validating request...")
+            validation = validate_request(query, llm)
+            logger.info(f"🔎 Validation result: {validation}")
 
-        if not validation.get("is_groovy_request"):
-            raise ValueError(f"Not a Groovy request: {validation.get('reason')}")
+            if not validation.get("is_groovy_request"):
+                raise ValueError(f"Not a Groovy request: {validation.get('reason')}")
 
-        if not validation.get("is_read_only") and allowModifications != True:
-            raise ValueError(f"Modification request blocked: {validation.get('reason')}")
+            if not validation.get("is_read_only") and allowModifications != True:
+                raise ValueError(f"Modification request blocked: {validation.get('reason')}")
 
-        # Step 2 — Retrieve context
-        logger.info("🔍 Retrieving context from Qdrant...")
-        context = str(query_engine.query(query))
+            # Step 2 — Retrieve context
+            logger.info("🔍 Retrieving context from Qdrant...")
+            context = str(query_engine.query(query))
 
-        # Step 3 — Generate script with retries
-        for attempt in range(1, MAX_RETRIES + 1):
-            logger.info(f"🔃 Generating script (attempt {attempt}/{MAX_RETRIES})")
+            # Step 3 — Generate script with retries
+            for attempt in range(1, MAX_RETRIES + 1):
+                logger.info(f"🔃 Generating script (attempt {attempt}/{MAX_RETRIES})")
 
-            result = generate_script(query, workspaces, properties, context, llm)
-            script = clean_script(result.get("script", ""))
+                result = generate_script(query, workspaces, properties, context, llm)
+                script = clean_script(result.get("script", ""))
 
-            if not result.get("is_valid_groovy"):
-                logger.warning(f"⚠️ LLM flagged output as invalid Groovy on attempt {attempt}, retrying...")
-                continue
+                if not result.get("is_valid_groovy"):
+                    logger.warning(f"⚠️ LLM flagged output as invalid Groovy on attempt {attempt}, retrying...")
+                    continue
 
-            if not result.get("is_safe"):
-                logger.warning(f"⚠️ LLM flagged script as unsafe on attempt {attempt}, retrying...")
-                continue
+                if not result.get("is_safe"):
+                    logger.warning(f"⚠️ LLM flagged script as unsafe on attempt {attempt}, retrying...")
+                    continue
 
-            logger.info("✅ Script generated successfully")
-            return {
-                "script": script,
-                "retries": attempt - 1,
-            }
+                logger.info("✅ Script generated successfully")
+                return {
+                    "script": script,
+                    "retries": attempt - 1,
+                }
 
-        raise ValueError("Failed to generate a valid script after max retries.")
+            raise ValueError("Failed to generate a valid script after max retries.")
 
-    except Exception as e:
-        logger.error(f"‼️ Failed to generate script: {e}")
-        raise
+        except Exception as e:
+            logger.error(f"‼️ Failed to generate script: {e}")
+            raise
+
 
 def clean_script(response: str) -> str:
     """Remove markdown code blocks from response."""
