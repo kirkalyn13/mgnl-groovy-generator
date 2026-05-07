@@ -174,7 +174,7 @@ Generate a Magnolia CMS Groovy script from a natural language query.
   "query": "Generate a Groovy script to retrieve all published pages",
   "workspaces": ["website"],
   "properties": ["pageTitle", "activationStatus", "path"],
-  "allowModifications": false
+  "allow_modifications": false
 }
 ```
  

@@ -4,7 +4,8 @@ class QueryRequest(BaseModel):
     query: str
     workspaces: list[str] = []
     properties: list[str] = []
-    allowModifications: bool = False
+    allow_modifications: bool = False
+    session_id: str | None = None
 
 class QueryResponse(BaseModel):
     success: bool

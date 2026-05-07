@@ -1,3 +1,4 @@
+import asyncio
 from contextlib import asynccontextmanager
 from dotenv import load_dotenv
 from fastapi import FastAPI
@@ -6,6 +7,7 @@ import uvicorn
 from config.init import init
 from config.langfuse import init_langfuse
 from config.openapi import custom_openapi
+from config.session import USING_REDIS, cleanup_loop
 from routers import register_routers
 from config.settings import HOST, PORT, ALLOWED_ORIGINS
 from config.logger import logger
@@ -20,13 +22,21 @@ limiter = Limiter(key_func=get_remote_address)
 async def lifespan(app: FastAPI):
     # Startup: runs once when the app starts
     init_langfuse()
+    
+    # RAG and LLM setup
     qdrant = init()
-
     app.state.vector_store = qdrant["vector_store"]
     app.state.query_engine = qdrant["query_engine"]
     app.state.llm = qdrant["llm"]
 
     logger.info("✅ RAG engine ready")
+
+    # Memory setup
+    app.state.sessions = {}  # always init, ignored if Redis is used
+
+    if not USING_REDIS:
+        asyncio.create_task(cleanup_loop(app))
+
     yield
  
     # Shutdown: clean up if needed

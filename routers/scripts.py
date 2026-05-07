@@ -21,7 +21,7 @@ from config.logger import logger
 def generate(request: Request, body: QueryRequest):
     """Router for script generation"""
     try:
-        result = run_generate(request, body.query, body.workspaces, body.properties, body.allowModifications)
+        result = run_generate(request, body.query, body.workspaces, body.properties, body.allow_modifications)
         return QueryResponse(
             success=True,
             query=body.query,
