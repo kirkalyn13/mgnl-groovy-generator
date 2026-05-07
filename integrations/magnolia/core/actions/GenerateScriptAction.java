@@ -3,6 +3,8 @@ package com.sample.cms.actions;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import info.magnolia.cms.security.SecurityUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.PropertyUtil;
@@ -190,6 +192,7 @@ public class GenerateScriptAction extends CommitAction<GenerateScriptActionDefin
     }
 
     /** Request payload sent to the generator API. */
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     private record GenerateRequest(String query, List<String> workspaces, List<String> properties, Boolean allowModifications) {}
 
     /** Response payload received from the generator API. */

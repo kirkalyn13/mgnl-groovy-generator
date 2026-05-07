@@ -29,7 +29,7 @@ A reference implementation is available in [`./integrations/magnolia`](./integra
 
 - Magnolia CMS 6.3.x+
 - The FastAPI backend running and accessible from the Magnolia instance
-- `magnolia.groovyGenerator.url` configured in your Magnolia properties file
+- Server URL and API Key configured in the Passwords app
 
 ## Tech Stack
 
