@@ -1,22 +1,17 @@
 import os
 from dotenv import load_dotenv
+from langfuse import get_client
 from config.logger import logger
 from langchain_ollama import ChatOllama
 from langchain.agents import create_agent
 from tools.script import TOOLS
-from langfuse.llama_index import LlamaIndexInstrumentor
 
 load_dotenv()
 TOOL_LLM = os.getenv("TOOL_CALL_LLM", "qwen3.5")
-instrumentor = LlamaIndexInstrumentor()
 
 def run_describe(script_path: str) -> str:
     """Describe a Groovy script based on its path in Magnolia."""
-    with instrumentor.observe(
-        user_id="api-user",
-        session_id=script_path[:20],
-        tags=["generate", "groovy"]
-    ):
+    with get_client().start_as_current_observation(as_type="span", name="describe_script"):
         try:
             llm = ChatOllama(model=TOOL_LLM, temperature=0)
             messages = [{"role": "user", "content": f"Fetch and explain the Groovy script at path: {script_path}"}]

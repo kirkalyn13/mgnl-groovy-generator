@@ -1,23 +1,18 @@
 import os
 from dotenv import load_dotenv
+from langfuse import get_client
 from config.logger import logger
 from langchain_ollama import ChatOllama
 from langchain.agents import create_agent
 from tools.script import TOOLS
-from langfuse.llama_index import LlamaIndexInstrumentor
 
 load_dotenv()
 REVIEW_LLM = os.getenv("OLLAMA_LLM", "mistral")
 TOOL_LLM = os.getenv("TOOL_CALL_LLM", "qwen3.5")
-instrumentor = LlamaIndexInstrumentor()
 
 def run_review(script_path: str) -> str:
     """Review a Groovy script based on its path in Magnolia."""
-    with instrumentor.observe(
-        user_id="api-user",
-        session_id=script_path[:20],
-        tags=["generate", "groovy"]
-    ):
+    with get_client().start_as_current_observation(as_type="span", name="review_script"):
         try:
             logger.info(f"💬 Reviewing groovy script from path: {script_path}")
 
