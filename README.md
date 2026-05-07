@@ -37,7 +37,7 @@ A reference implementation is available in [`./integrations/magnolia`](./integra
 |||
 | Frontend | React, Vite, Tailwind CSS |
 | Backend | FastAPI, Python |
-| LLM & Embeddings | Ollama (`mistral`, `nomic-embed-text`) |
+| LLM & Embeddings | Ollama (`mistral`, `nomic-embed-text`, `qwen3.5`) |
 | Vector Store | Qdrant |
 | RAG Framework | LlamaIndex |
 | CMS Integration | Magnolia CMS |

@@ -47,6 +47,7 @@ generateScript:
   icon: icon-add-fav
   $type: openDialogAction
   dialogId: sample-lm:generateScript
+  allowModifications: false
   availability:
     writePermissionRequired: true
     root: true
