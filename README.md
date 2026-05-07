@@ -41,10 +41,42 @@ A reference implementation is available in [`./integrations/magnolia`](./integra
 | Vector Store | Qdrant |
 | RAG Framework | LlamaIndex |
 | CMS Integration | Magnolia CMS |
+| Observability | LangFuse |
 
 ## Architecture
 
-![Architecture](./assets/diagram.svg)
+```mermaid
+flowchart RL
+
+    subgraph CLIENTS["Clients"]
+        direction TB
+        REACT["⚛️   React + Vite UI"]
+        MAGNOLIA["📝 Magnolia CMS
+        Custom Action"]
+    end
+
+    CLIENTS -->|"HTTP Request"| REST["🌐 REST API
+    POST /v1/generate
+    POST /v1/ingest"]
+    REST --> FASTAPI["⚡ FastAPI Server"]
+    FASTAPI --> OLLAMA["🦙 Ollama LLM
+    mistral · nomic-embed-text"]
+    FASTAPI <--> QDRANT["🗄️ Qdrant
+    Vector Store"]
+    OLLAMA --> QDRANT
+    FASTAPI -->|"JSON Response"| CLIENTS
+    FASTAPI -->|"Traces & Metrics"| LANGFUSE["📊 Langfuse
+    Observability"]
+
+    style REACT fill:#f0fdf4,stroke:#16a34a,stroke-width:2px,color:#000000
+    style MAGNOLIA fill:#f0fdf4,stroke:#16a34a,stroke-width:2px,color:#000000
+    style CLIENTS fill:#ffffff,stroke:#16a34a,stroke-width:1px,stroke-dasharray:5,color:#000000
+    style REST fill:#f9fafb,stroke:#6b7280,stroke-width:2px,color:#000000
+    style FASTAPI fill:#f0fdf4,stroke:#16a34a,stroke-width:2px,color:#000000
+    style OLLAMA fill:#fefce8,stroke:#ca8a04,stroke-width:2px,color:#000000
+    style QDRANT fill:#eff6ff,stroke:#3b82f6,stroke-width:2px,color:#000000
+    style LANGFUSE fill:#fdf4ff,stroke:#a855f7,stroke-width:2px,color:#000000
+```
 
 ## Features
 
@@ -201,6 +233,27 @@ Describes the groovy script pull from `/{script_path}` from a Magnolia CMS insta
     "description": "This Groovy script is a utility for inspecting Magnolia module dependencies and version information..."
 }
 ```
+## Observability
+
+This app uses [Langfuse](https://langfuse.com) to trace and monitor the RAG pipeline in real time.
+
+![LangFuse Traces](./assets/langfuse-traces.png)
+![LangFuse Observations](./assets/langfuse-observations.png)
+
+> [!NOTE]
+> Langfuse is optional. The app will run without it if no keys are configured.
+
+### Setup
+
+Add the following to your `.env`:
+
+```env
+LANGFUSE_PUBLIC_KEY=pk-lf-...
+LANGFUSE_SECRET_KEY=sk-lf-...
+LANGFUSE_BASE_URL=https://cloud.langfuse.com
+```
+
+Get your keys from [cloud.langfuse.com](https://cloud.langfuse.com) — a free tier is available with 50,000 traces/month, no credit card required.
 
 ## Improvements
 
