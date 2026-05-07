@@ -42,6 +42,7 @@ A reference implementation is available in [`./integrations/magnolia`](./integra
 | RAG Framework | LlamaIndex |
 | CMS Integration | Magnolia CMS |
 | Observability | LangFuse |
+| Memory | Redis |
 
 ## Architecture
 
@@ -53,6 +54,14 @@ flowchart RL
         REACT["⚛️   React + Vite UI"]
         MAGNOLIA["📝 Magnolia CMS
         Custom Action"]
+    end
+
+    subgraph SESSION["Session Store"]
+        direction TB
+        REDIS["🔴 Redis
+        (if REDIS_URL is set)"]
+        MEMORY["🧠 In-Memory
+        (fallback)"]
     end
 
     CLIENTS -->|"HTTP Request"| REST["🌐 REST API
@@ -67,6 +76,7 @@ flowchart RL
     FASTAPI -->|"JSON Response"| CLIENTS
     FASTAPI -->|"Traces & Metrics"| LANGFUSE["📊 Langfuse
     Observability"]
+    FASTAPI <-->|"Read / Write Session"| SESSION
 
     style REACT fill:#f0fdf4,stroke:#16a34a,stroke-width:2px,color:#000000
     style MAGNOLIA fill:#f0fdf4,stroke:#16a34a,stroke-width:2px,color:#000000
@@ -76,6 +86,9 @@ flowchart RL
     style OLLAMA fill:#fefce8,stroke:#ca8a04,stroke-width:2px,color:#000000
     style QDRANT fill:#eff6ff,stroke:#3b82f6,stroke-width:2px,color:#000000
     style LANGFUSE fill:#fdf4ff,stroke:#a855f7,stroke-width:2px,color:#000000
+    style REDIS fill:#fff1f2,stroke:#e11d48,stroke-width:2px,color:#000000
+    style MEMORY fill:#f0fdf4,stroke:#16a34a,stroke-width:2px,color:#000000
+    style SESSION fill:#ffffff,stroke:#e11d48,stroke-width:1px,stroke-dasharray:5,color:#000000
 ```
 
 ## Features
@@ -88,12 +101,14 @@ flowchart RL
 - Retry logic — automatically retries if output contains unwanted content
 - Rate limiting — 1 request per second per client
 - Fully local — runs entirely on your machine with no cloud API required
+- Session Memory - remembers session requests to refine succeeding queries
 
 ## Prerequisites
 
 - Python 3.11+
 - Node.js 18+
 - [Ollama](https://ollama.com) installed and running
+- Redis (Optional)
 
 ## Getting Started
  
