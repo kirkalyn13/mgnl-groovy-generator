@@ -2,7 +2,6 @@ import re
 import json
 from fastapi import Request
 from langfuse import get_client
-from config import langfuse
 from config.logger import logger
 from config.settings import MAX_RETRIES
 from config.session import USING_REDIS, create_session, get_session, add_to_session, format_history
@@ -58,6 +57,7 @@ def run_generate(request: Request, query: str, workspaces: list[str], properties
 
             # Store on success
             add_to_session(sessions, session_id, query, script)
+            evaluate_output(script, query, llm)
 
             return {
                 "script": script,
@@ -132,3 +132,30 @@ def generate_script(query: str, workspaces: list[str], properties: list[str], co
         response = str(llm.complete(prompt)).strip()
         clean = re.sub(r"^```[\w]*\n?|```$", "", response, flags=re.MULTILINE).strip()
         return json.loads(clean)
+    
+def evaluate_output(script: str, query: str, llm) -> None:
+    """Evaluate generated script quality and send scores to Langfuse."""
+    with get_client().start_as_current_observation(as_type="span", name="evaluate_output"):
+        prompt = f"""
+        Score the following Groovy script on a scale of 0.0 to 1.0 for each criterion.
+        Respond ONLY with a JSON object, no explanation, no markdown.
+
+        {{
+            "relevance": 0.0 to 1.0,
+            "correctness": 0.0 to 1.0,
+            "safety": 0.0 to 1.0
+        }}
+
+        Query: {query}
+        Script: {script}
+        """
+        response = str(llm.complete(prompt)).strip()
+        clean = re.sub(r"^```[\w]*\n?|```$", "", response, flags=re.MULTILINE).strip()
+        scores = json.loads(clean)
+
+        for metric, score in scores.items():
+            get_client().create_score(
+                name=metric,
+                value=score,
+            )
+        logger.info(f"📊 Eval scores: {scores}")

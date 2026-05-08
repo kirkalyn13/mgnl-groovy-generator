@@ -43,12 +43,12 @@ def generate(request: Request, body: QueryRequest):
     description="Loads and embeds Groovy scripts from the data folder into Qdrant.",
     dependencies=[Depends(verify_api_key)])
 @limiter.limit(RATE_LIMIT)
-def ingest(request: Request, body: IngestRequest):
+async def ingest(request: Request, body: IngestRequest):
     """Router for scripts document ingestion"""
     try:
         path = body.path
         vector_store = request.app.state.vector_store
-        ingested_files = run_ingest(vector_store, path)
+        ingested_files = await run_ingest(vector_store, path)
         response = f"Successfully ingested {ingested_files} documents."
 
         return IngestResponse(success=True, message=response)
