@@ -2,7 +2,7 @@ import asyncio
 import click
 
 from config.init import init
-from services.ingest import run_ingest
+from pipeline.ingest import run_ingest
 
 @click.command()
 @click.option(

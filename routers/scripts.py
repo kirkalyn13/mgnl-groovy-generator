@@ -7,7 +7,7 @@ from dtos.ingest import IngestRequest, IngestResponse
 from dtos.review import ReviewResponse
 from dtos.describe import DescribeResponse
 from services.generate import run_generate
-from services.ingest import run_ingest
+from pipeline.ingest import run_ingest
 from services.review import run_review
 from services.describe import run_describe
 from config.logger import logger
