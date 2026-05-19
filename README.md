@@ -248,6 +248,35 @@ Describes the groovy script pull from `/{script_path}` from a Magnolia CMS insta
     "description": "This Groovy script is a utility for inspecting Magnolia module dependencies and version information..."
 }
 ```
+
+## RAG Pipeline
+
+The ingestion pipeline processes Groovy scripts into the Qdrant vector store through a series of discrete steps before they can be used for script generation. This could be triggred manually via REST API (`POST /v1/scripts/ingest`) or via scheduler, currently set every 12 hours.
+
+```mermaid
+flowchart LR
+    Groovy[".groovy files"] --> Load
+    Load --> Validate
+    Validate --> Enrich
+    Enrich --> Chunk
+    Chunk --> Embed
+    Embed --> Qdrant
+```
+
+### Steps
+
+**Load** — Reads `.groovy` files from the `data/` folder using LlamaIndex's `SimpleDirectoryReader`.
+
+**Validate** — Filters out empty or malformed scripts before they reach the embedding step, keeping the vector store clean.
+
+**Enrich** — Tags each document with metadata including `file_type`, `script_name`, and `ingested_at` timestamp for filtering and traceability.
+
+**Chunk** — Splits scripts into 512-token overlapping nodes using `SentenceSplitter` so large scripts are retrievable at a granular level.
+
+**Embed** — Generates vector embeddings using `nomic-embed-text` via Ollama.
+
+**Store** — Upserts nodes into Qdrant with deduplication — unchanged scripts are skipped on re-ingestion.
+
 ## Observability
 
 This app uses [Langfuse](https://langfuse.com) to trace and monitor the RAG pipeline in real time.

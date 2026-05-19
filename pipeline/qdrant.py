@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 from llama_index.core import VectorStoreIndex
-from qdrant_client import QdrantClient
+from qdrant_client import QdrantClient, AsyncQdrantClient
 from qdrant_client.models import Distance, VectorParams
 from llama_index.vector_stores.qdrant import QdrantVectorStore
 from llama_index.core.vector_stores.types import MetadataFilter, MetadataFilters, FilterOperator
@@ -16,18 +16,27 @@ api_key = os.getenv("QDRANT_API_KEY")
 collection_name = os.getenv("COLLECTION_NAME", "magnolia_groovies")
 
 # Setup Client
-def setup_client() -> QdrantClient:
+def setup_client() -> AsyncQdrantClient:
     """Setup QDrant Client"""
     return QdrantClient(
-        url = url,
         api_key = api_key,
+        url=url
+    )
+
+# Setup Async Client
+async def setup_aclient() -> AsyncQdrantClient:
+    """Setup Async QDrant Client"""
+    return AsyncQdrantClient(
+        api_key = api_key,
+        url=url
     )
 
 
-def init_vector_store():
+async def init_vector_store():
     """Instantiate QDrant Vector Store"""
     logger.info("⚙️  Setting up vector store...")
     client = setup_client()
+    aclient = await setup_aclient()
 
     logger.info(f"🧰 QDrant Client URL: {url}")
     logger.info(f"🧰 Collection Name: {collection_name}")
@@ -48,13 +57,14 @@ def init_vector_store():
     # Create and return vector store
     return QdrantVectorStore(
         client=client,
+        aclient=aclient,
         collection_name=collection_name,
     )
 
-def init_rag_engine(llm):
+async def init_rag_engine(llm):
     """Instantiate Vector Store and Query Engine"""
     logger.info("⚙️  Setting up query engine...")
-    vector_store = init_vector_store()
+    vector_store = await init_vector_store()
     index = VectorStoreIndex.from_vector_store(vector_store)
 
     # Reranker — reorders top-k results by relevance
