@@ -14,7 +14,6 @@ from config.logger import logger
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
-from pipeline.scheduler import run_pipeline_scheduler
 
 load_dotenv()
 limiter = Limiter(key_func=get_remote_address)
@@ -29,9 +28,6 @@ async def lifespan(app: FastAPI):
     app.state.vector_store = qdrant["vector_store"]
     app.state.query_engine = qdrant["query_engine"]
     app.state.llm = qdrant["llm"]
-
-    # Run scheduler
-    run_pipeline_scheduler(qdrant["vector_store"])
     logger.info("✅ RAG engine ready")
 
     # Memory setup

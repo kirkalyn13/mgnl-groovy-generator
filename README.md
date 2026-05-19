@@ -251,7 +251,7 @@ Describes the groovy script pull from `/{script_path}` from a Magnolia CMS insta
 
 ## RAG Pipeline
 
-The ingestion pipeline processes Groovy scripts into the Qdrant vector store through a series of discrete steps before they can be used for script generation. This could be triggred manually via REST API (`POST /v1/scripts/ingest`) or via scheduler, currently set every 12 hours.
+The ingestion pipeline processes Groovy scripts into the Qdrant vector store through a series of discrete steps before they can be used for script generation. This could be triggred manually via REST API (`POST /v1/scripts/ingest`), or via CLI (for Airflow integration).
 
 ```mermaid
 flowchart LR
@@ -261,6 +261,12 @@ flowchart LR
     Enrich --> Chunk
     Chunk --> Embed
     Embed --> Qdrant
+```
+
+To run pipeline via CLI:
+
+```bash
+python -m cli --path ./data
 ```
 
 ### Steps
