@@ -12,8 +12,6 @@ x-airflow-common: &airflow-common
     AIRFLOW__API__AUTH_BACKENDS: "airflow.api.auth.backend.basic_auth"
     # Pipeline config — override in .env
     RAG_INGEST_URL: ${RAG_INGEST_URL:-http://host.docker.internal:8000/v1/scripts/ingest}
-    OPEN_SIGNAL_API_KEY: ${OPEN_SIGNAL_API_KEY:-}
-    OPEN_SIGNAL_BASE_URL: ${OPEN_SIGNAL_BASE_URL:-https://api.opensignal.com}
   volumes:
     - ./dags:/opt/airflow/dags
     - ./logs:/opt/airflow/logs
