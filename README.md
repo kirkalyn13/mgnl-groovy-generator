@@ -253,7 +253,7 @@ Describes the groovy script pull from `/{script_path}` from a Magnolia CMS insta
 
 The ingestion pipeline processes Groovy scripts into the Qdrant vector store through a series of discrete steps before they can be used for script generation. This could be triggred manually via REST API (`POST /v1/scripts/ingest`), CLI, or via Airflow.
 
-### Airflow
+### [Airflow](./airflow/README.md)
 
 The RAG pipeline is orchestrated using an Apache Airflow DAG that initiates ingestion by invoking the POST /v1/scripts/ingest endpoint.
 

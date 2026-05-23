@@ -27,3 +27,6 @@ data/
 .idea/
 *.swp
 *.swo
+
+# Airflow
+/airflow/logs/*
