@@ -317,6 +317,36 @@ Get your keys from [cloud.langfuse.com](https://cloud.langfuse.com) — a free t
 - Use a larger, more powerful model e.g. OpenAI gpt models
 - Ingest more well-documented and labeled Groovy scripts.
 
+## Infrastructure (`/infra`)
+
+This directory contains all Infrastructure as Code (IaC) using Terraform.
+For dev purposers, it provisions and manages AWS-like resources locally via LocalStack for testing.
+
+### Structure
+
+- `environments/` – Environment-specific configurations (local, dev, prod-ready layout)
+- `main.tf` – Root module entry point
+- `variables.tf` – Input variables
+- `outputs.tf` – Output values
+
+Modules are found in the [`platform-infra`](https://github.com/kirkalyn13/platform-infra) repository.
+
+```bash
+terraform init
+terraform plan
+terraform apply
+```
+
+### Local Development (LocalStack)
+
+This project uses LocalStack to emulate AWS services locally for safe testing.
+
+```bash
+tflocal init
+tflocal plan
+tflocal apply
+```
+
 ## Authors
 
 - [Engr. Kirk Alyn Santos](https://github.com/kirkalyn13)
