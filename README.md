@@ -34,7 +34,7 @@ A reference implementation is available in [`./integrations/magnolia`](./integra
 ## Tech Stack
 
 | Layer | Technology |
-|||
+|---|---|
 | Frontend | React, Vite, Tailwind CSS |
 | Backend | FastAPI, Python |
 | LLM & Embeddings | Ollama (`mistral`, `nomic-embed-text`, `qwen3.5`) |
@@ -148,8 +148,9 @@ pip install -r requirements.txt
 ### 4. Pull Ollama models
  
 ```bash
-ollama pull nomic-embed-text
-ollama pull mistral
+ollama pull mistral # For generative AI functions
+ollama pull nomic-embed-text # For embedding
+ollam pull qwen3.5  # For tool calling
 ```
  
 ### 5. Ingest your Groovy scripts
