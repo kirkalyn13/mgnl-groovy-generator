@@ -348,6 +348,19 @@ tflocal plan
 tflocal apply
 ```
 
+## Testing
+
+Run the test suite with:
+
+```bash
+pytest -v
+```
+
+Coverage priorities:
+- **Unit** — pure functions (`pipeline/`, `services/`) 
+- **Integration** — mocked LLM/agent calls
+- **API** — FastAPI routers via `TestClient`
+
 ## Authors
 
 - [Engr. Kirk Alyn Santos](https://github.com/kirkalyn13)
