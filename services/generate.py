@@ -157,5 +157,6 @@ def evaluate_output(script: str, query: str, llm) -> None:
             get_client().create_score(
                 name=metric,
                 value=score,
+                trace_id=get_client().get_current_trace_id()
             )
         logger.info(f"📊 Eval scores: {scores}")
