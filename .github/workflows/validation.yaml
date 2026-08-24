@@ -37,3 +37,6 @@ jobs:
 
       - name: Import check
         run: python -c "import app"
+
+      - name: Run tests
+        run: python -m pytest -v

@@ -15,7 +15,7 @@ class AuthSettings(BaseSettings):
             return v
         return ""
 
-    class Config:
+    class ConfigDict:
         env_file = ".env"
         env_file_encoding = "utf-8"
         extra = "ignore" 
