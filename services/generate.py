@@ -153,10 +153,14 @@ def evaluate_output(script: str, query: str, llm) -> None:
         clean = re.sub(r"^```[\w]*\n?|```$", "", response, flags=re.MULTILINE).strip()
         scores = json.loads(clean)
 
+        # Trace score
+        trace_id = get_client().get_current_trace_id()
         for metric, score in scores.items():
             get_client().create_score(
+                trace_id=trace_id,
                 name=metric,
                 value=score,
-                trace_id=get_client().get_current_trace_id()
+                data_type="NUMERIC"
             )
+
         logger.info(f"📊 Eval scores: {scores}")
