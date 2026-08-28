@@ -1,0 +1,110 @@
+name: Terraform 🏗️
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "Terraform action to run"
+        required: true
+        type: choice
+        options:
+          - plan
+          - apply
+          - destroy
+
+env:
+  AWS_ACCESS_KEY_ID: test
+  AWS_SECRET_ACCESS_KEY: test
+  AWS_DEFAULT_REGION: us-east-1
+  TF_VAR_aws_region: us-east-1
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    services:
+      localstack:
+        image: localstack/localstack:latest
+        ports:
+          - 4566:4566
+        env:
+          SERVICES: ec2,vpc,secretsmanager,ssm,iam,sts
+        options: >-
+          --health-cmd "curl -f http://localhost:4566/_localstack/health"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.9.0
+
+      - name: Wait for LocalStack
+        run: |
+          for i in {1..30}; do
+            curl -s http://localhost:4566/_localstack/health && break
+            sleep 2
+          done
+
+      - name: Terraform Init
+        run: terraform init -upgrade
+
+      # --- plan ---
+      - name: Terraform Plan
+        if: ${{ inputs.action == 'plan' }}
+        run: terraform plan -out=tfplan
+
+      - name: Upload Plan Artifact
+        if: ${{ inputs.action == 'plan' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: tfplan
+          path: tfplan
+          retention-days: 7
+
+      # --- apply ---
+      - name: Terraform Plan (Apply)
+        if: ${{ inputs.action == 'apply' }}
+        run: terraform plan -out=tfplan-apply
+
+      - name: Upload Apply Plan Artifact
+        if: ${{ inputs.action == 'apply' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: tfplan-apply
+          path: tfplan-apply
+          retention-days: 7
+
+      - name: Terraform Apply
+        if: ${{ inputs.action == 'apply' }}
+        run: terraform apply -auto-approve tfplan-apply
+
+      - name: Upload State Artifact
+        if: ${{ inputs.action == 'apply' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: tfstate
+          path: terraform.tfstate
+          retention-days: 7
+
+      # --- destroy ---
+      - name: Terraform Plan (Destroy)
+        if: ${{ inputs.action == 'destroy' }}
+        run: terraform plan -destroy -out=tfplan-destroy
+
+      - name: Upload Destroy Plan Artifact
+        if: ${{ inputs.action == 'destroy' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: tfplan-destroy
+          path: tfplan-destroy
+          retention-days: 7
+
+      - name: Terraform Destroy
+        if: ${{ inputs.action == 'destroy' }}
+        run: terraform apply -auto-approve tfplan-destroy

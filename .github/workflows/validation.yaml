@@ -1,4 +1,4 @@
-name: Run Validations
+name: Run Validations 📋
 
 on:
   push:
