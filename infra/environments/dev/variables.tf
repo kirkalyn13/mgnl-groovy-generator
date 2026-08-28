@@ -50,7 +50,7 @@ variable "domain_name" {
 }
 
 variable "api_key" {
-  description = "API key for the Spring Boot app — set via TF_VAR_api_key"
+  description = "API key for the application — set via TF_VAR_api_key"
   type        = string
   sensitive   = true
 }
