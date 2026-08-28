@@ -13,6 +13,16 @@ variable "vpc_cidr" {
   default = "10.0.0.0/16"
 }
 
+variable "create_public_subnet" {
+  type    = bool
+  default = false
+}
+
+variable "create_private_subnet" {
+  type    = bool
+  default = true
+}
+
 variable "ami_id" {
   description = "AMI ID — dummy value is fine for LocalStack"
   type        = string
