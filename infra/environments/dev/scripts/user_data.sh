@@ -3,12 +3,10 @@ set -e
 
 # Update and install dependencies
 yum update -y
-yum install -y gcc gcc-c++ make git
+yum install -y gcc gcc-c++ make git awscli
 
 # Install Python 3.11
 yum install -y python3.11 python3.11-pip
-
-# Set Python 3.11 as default
 alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1
 alternatives --install /usr/bin/pip3 pip3 /usr/bin/pip3.11 1
 
@@ -16,8 +14,6 @@ alternatives --install /usr/bin/pip3 pip3 /usr/bin/pip3.11 1
 curl -fsSL https://ollama.com/install.sh | sh
 systemctl enable ollama
 systemctl start ollama
-
-# Pull required models
 ollama pull mistral
 ollama pull nomic-embed-text
 
@@ -49,7 +45,29 @@ pip3 install \
   "ollama>=0.3.1" \
   "nest-asyncio>=1.6.0"
 
+# Build .env from Secrets Manager (by ARN) + Parameter Store (by name)
+ENV_FILE="${app_jar_path}/.env"
+mkdir -p "${app_jar_path}"
+> "$ENV_FILE"
+
+%{ for key, arn in secret_arns ~}
+value=$(aws secretsmanager get-secret-value \
+  --secret-id "${arn}" \
+  --query SecretString --output text \
+  --region "${aws_region}")
+echo "$(echo ${key} | tr a-z A-Z)=$value" >> "$ENV_FILE"
+%{ endfor ~}
+
+%{ for key, name in parameter_names ~}
+value=$(aws ssm get-parameter \
+  --name "${name}" \
+  --query Parameter.Value --output text \
+  --region "${aws_region}")
+echo "$(echo ${key} | tr a-z A-Z)=$value" >> "$ENV_FILE"
+%{ endfor ~}
+
 # Run FastAPI app
+cd "${app_jar_path}"
 nohup uvicorn main:app \
   --host 0.0.0.0 \
   --port ${app_port} \
