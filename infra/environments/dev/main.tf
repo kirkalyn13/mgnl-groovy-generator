@@ -34,7 +34,7 @@ module "secrets" {
     api_key             = var.api_key
     qdrant_api_key      = var.qdrant_api_key
     magnolia_username   = var.magnolia_username
-    magnolia_superuser  = var.magnolia_superuser
+    magnolia_password   = var.magnolia_password
     langfuse_secret_key = var.langfuse_secret_key
     langfuse_public_key = var.langfuse_public_key
   }

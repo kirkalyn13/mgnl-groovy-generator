@@ -72,7 +72,7 @@ variable "magnolia_username" {
   sensitive   = true
 }
 
-variable "magnolia_superuser" {
+variable "magnolia_password" {
   description = "Magnolia CMS instance password"
   type        = string
   sensitive   = true
