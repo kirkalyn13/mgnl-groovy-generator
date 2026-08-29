@@ -1,10 +1,10 @@
-name: Terraform 🏗️
+name: Terraform Dev 🏗️
 
 on:
   workflow_dispatch:
     inputs:
       action:
-        description: "Terraform action to run"
+        description: "Terraform action to run for dev env."
         required: true
         type: choice
         options:
@@ -39,7 +39,7 @@ env:
 
 jobs:
   terraform:
-    name: Terraform ${{ inputs.action }} 
+    name: Terraform ${{ inputs.action }}
     runs-on: ubuntu-latest
     environment: dev
     defaults:
@@ -69,6 +69,9 @@ jobs:
         with:
           terraform_version: 1.9.0
 
+      - name: Install tflocal
+        run: pip install terraform-local
+
       - name: Wait for LocalStack
         run: |
           for i in {1..30}; do
@@ -77,12 +80,12 @@ jobs:
           done
 
       - name: Terraform Init
-        run: terraform init -upgrade
+        run: tflocal init -upgrade
 
       # --- plan ---
       - name: Terraform Plan
         if: ${{ inputs.action == 'plan' }}
-        run: terraform plan -out=tfplan
+        run: tflocal plan -out=tfplan
 
       - name: Upload Plan Artifact
         if: ${{ inputs.action == 'plan' }}
@@ -95,7 +98,7 @@ jobs:
       # --- apply ---
       - name: Terraform Plan (Apply)
         if: ${{ inputs.action == 'apply' }}
-        run: terraform plan -out=tfplan-apply
+        run: tflocal plan -out=tfplan-apply
 
       - name: Upload Apply Plan Artifact
         if: ${{ inputs.action == 'apply' }}
@@ -107,7 +110,7 @@ jobs:
 
       - name: Terraform Apply
         if: ${{ inputs.action == 'apply' }}
-        run: terraform apply -auto-approve tfplan-apply
+        run: tflocal apply -auto-approve tfplan-apply
 
       - name: Upload State Artifact
         if: ${{ inputs.action == 'apply' }}
@@ -120,7 +123,7 @@ jobs:
       # --- destroy ---
       - name: Terraform Plan (Destroy)
         if: ${{ inputs.action == 'destroy' }}
-        run: terraform plan -destroy -out=tfplan-destroy
+        run: tflocal plan -destroy -out=tfplan-destroy
 
       - name: Upload Destroy Plan Artifact
         if: ${{ inputs.action == 'destroy' }}
@@ -132,4 +135,4 @@ jobs:
 
       - name: Terraform Destroy
         if: ${{ inputs.action == 'destroy' }}
-        run: terraform apply -auto-approve tfplan-destroy
+        run: tflocal apply -auto-approve tfplan-destroy
