@@ -327,7 +327,7 @@ For dev purposes, it provisions and manages AWS-like resources locally via Local
 
 ![AWS Architecture](./assets/aws-architecture.png)
 
-This project uses a deliberately simple, single-region AWS architecture — appropriate for a portfolio piece demonstrating infrastructure-as-code practices rather than a production-scale system. The goal was to show a realistic, secure pattern (private compute, no hardcoded secrets, basic observability) without the added complexity of multi-AZ redundancy, load balancing, or auto-scaling that a production Magnolia CMS deployment would eventually need.
+This project uses a deliberately simple, single-region AWS architecture, prioritizing clarity and maintainability. The design follows core infrastructure best practices — private compute, externalized secrets and configuration, least-privilege IAM, and basic observability — with an architecture built to scale incrementally as requirements evolve.
 
 **Services used:**
 
