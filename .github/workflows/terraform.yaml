@@ -89,7 +89,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: tfplan
-          path: tfplan
+          path: infra/environments/dev/tfplan
           retention-days: 7
 
       # --- apply ---
@@ -102,7 +102,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: tfplan-apply
-          path: tfplan-apply
+          path: infra/environments/dev/tfplan-apply
           retention-days: 7
 
       - name: Terraform Apply
@@ -114,7 +114,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: tfstate
-          path: terraform.tfstate
+          path: infra/environments/dev/terraform.tfstate
           retention-days: 7
 
       # --- destroy ---
@@ -127,7 +127,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: tfplan-destroy
-          path: tfplan-destroy
+          path: infra/environments/dev/tfplan-destroy
           retention-days: 7
 
       - name: Terraform Destroy
