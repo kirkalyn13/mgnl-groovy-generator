@@ -17,6 +17,25 @@ env:
   AWS_SECRET_ACCESS_KEY: test
   AWS_DEFAULT_REGION: us-east-1
   TF_VAR_aws_region: us-east-1
+  TF_VAR_app_name: ${{ vars.APP_NAME }}
+  TF_VAR_api_key: ${{ secrets.API_KEY }}
+  TF_VAR_qdrant_url: ${{ secrets.QDRANT_URL }}
+  TF_VAR_qdrant_api_key: ${{ secrets.QDRANT_API_KEY }}
+  TF_VAR_magnolia_username: ${{ secrets.MAGNOLIA_USERNAME }}
+  TF_VAR_magnolia_superuser: ${{ secrets.MAGNOLIA_SUPERUSER }}
+  TF_VAR_langfuse_secret_key: ${{ secrets.LANGFUSE_SECRET_KEY }}
+  TF_VAR_langfuse_public_key: ${{ secrets.LANGFUSE_PUBLIC_KEY }}
+  TF_VAR_collection_name: ${{ vars.COLLECTION_NAME }}
+  TF_VAR_llm_mode: ${{ vars.LLM_MODE }}
+  TF_VAR_ollama_url: ${{ vars.OLLAMA_URL }}
+  TF_VAR_ollama_embedding_model: ${{ vars.OLLAMA_EMBEDDING_MODEL }}
+  TF_VAR_ollama_llm: ${{ vars.OLLAMA_LLM }}
+  TF_VAR_tool_call_llm: ${{ vars.TOOL_CALL_LLM }}
+  TF_VAR_magnolia_scripts_rest_delivery_url: ${{ vars.MAGNOLIA_SCRIPTS_REST_DELIVERY_URL }}
+  TF_VAR_langfuse_base_url: ${{ vars.LANGFUSE_BASE_URL }}
+  TF_VAR_redis_url: ${{ vars.REDIS_URL }}
+  TF_VAR_session_ttl_minutes: ${{ vars.SESSION_TTL_MINUTES }}
+  TF_VAR_session_size: ${{ vars.SESSION_SIZE }}
 
 jobs:
   terraform:
