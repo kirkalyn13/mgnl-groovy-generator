@@ -3,6 +3,11 @@ variable "app_name" {
   default = "mgnl-groovy-generator"
 }
 
+variable "env" {
+  type    = string
+  default = "dev"
+}
+
 variable "aws_region" {
   type    = string
   default = "us-east-1"

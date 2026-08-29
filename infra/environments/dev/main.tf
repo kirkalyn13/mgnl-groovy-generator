@@ -58,3 +58,9 @@ module "parameter_store" {
     session_size                       = var.session_size
   }
 }
+
+module "cloudwatch" {
+  source   = "git::https://github.com/kirkalyn13/platform-infra.git//modules/cloudwatch"
+  app_name = var.app_name
+  env      = var.env
+}
