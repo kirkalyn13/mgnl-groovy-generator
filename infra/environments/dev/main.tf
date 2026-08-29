@@ -60,7 +60,9 @@ module "parameter_store" {
 }
 
 module "cloudwatch" {
-  source   = "git::https://github.com/kirkalyn13/platform-infra.git//modules/cloudwatch"
-  app_name = var.app_name
-  env      = var.env
+  source           = "git::https://github.com/kirkalyn13/platform-infra.git//modules/cloudwatch"
+  app_name         = var.app_name
+  env              = var.env
+  instance_id      = module.ec2.instance_id
+  create_cpu_alarm = true
 }
