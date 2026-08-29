@@ -321,7 +321,25 @@ Get your keys from [cloud.langfuse.com](https://cloud.langfuse.com) — a free t
 ## Infrastructure (`/infra`)
 
 This directory contains all Infrastructure as Code (IaC) using Terraform.
-For dev purposers, it provisions and manages AWS-like resources locally via LocalStack for testing.
+For dev purposes, it provisions and manages AWS-like resources locally via LocalStack for testing.
+
+### Architecture
+
+![AWS Architecture](./assets/aws-architecture.png)
+
+This project uses a deliberately simple, single-region AWS architecture — appropriate for a portfolio piece demonstrating infrastructure-as-code practices rather than a production-scale system. The goal was to show a realistic, secure pattern (private compute, no hardcoded secrets, basic observability) without the added complexity of multi-AZ redundancy, load balancing, or auto-scaling that a production Magnolia CMS deployment would eventually need.
+
+**Services used:**
+
+- **EC2** — hosts the FastAPI application that powers the Groovy script generator.
+- **VPC** — provides network isolation for the app, with a public/private subnet split so the compute layer isn't directly internet-facing.
+- **Secrets Manager** — stores genuinely sensitive values (API keys, Magnolia credentials, Langfuse keys) separately from plain configuration, so they can be managed and rotated independently.
+- **Parameter Store (SSM)** — holds non-sensitive runtime configuration (URLs, model names, session settings) that doesn't need Secrets Manager's rotation/versioning overhead.
+- **IAM** — scopes the EC2 instance's permissions to only what it needs (reading its own secrets/parameters), rather than broad account-level access.
+- **STS** — underlies the temporary credentials IAM roles use to authenticate, standard whenever an EC2 instance profile is involved.
+- **Route 53** — handles DNS resolution for the app under a custom domain, rather than relying on a raw instance IP or default cloud-provider hostname.
+- **CloudWatch** — provides basic operational visibility via a CPU utilization alarm, enough to know if the instance is under sustained load.
+- **CloudWatch Logs** — centralizes the app's logs instead of leaving them only on local disk (`/var/log/app.log`), useful for debugging without SSH-ing into the instance.
 
 ### Structure
 
