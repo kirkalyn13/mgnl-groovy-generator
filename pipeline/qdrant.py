@@ -4,7 +4,6 @@ from llama_index.core import VectorStoreIndex
 from qdrant_client import QdrantClient, AsyncQdrantClient
 from qdrant_client.models import Distance, VectorParams
 from llama_index.vector_stores.qdrant import QdrantVectorStore
-from llama_index.core.vector_stores.types import MetadataFilter, MetadataFilters, FilterOperator
 from llama_index.core.postprocessor import SimilarityPostprocessor
 from llama_index.postprocessor.colbert_rerank import ColbertRerank
 from config.logger import logger
@@ -13,7 +12,8 @@ from config.logger import logger
 load_dotenv()
 url = os.getenv("QDRANT_URL")
 api_key = os.getenv("QDRANT_API_KEY")
-collection_name = os.getenv("COLLECTION_NAME", "magnolia_groovies")
+llm_mode = os.getenv("LLM_MODE")
+collection_name = os.getenv("COLLECTION_NAME", "magnolia_groovies") + "_" + llm_mode
 
 # Setup Client
 def setup_client() -> AsyncQdrantClient:
@@ -48,7 +48,7 @@ async def init_vector_store():
         client.create_collection(
             collection_name=collection_name,
             vectors_config=VectorParams(
-                size=768,        # nomic-embed-text dimension
+                size=get_collection_size(llm_mode),        # nomic-embed-text dimension
                 distance=Distance.COSINE,
             ),
         )
@@ -84,3 +84,12 @@ async def init_rag_engine(llm):
             ]       
         )
     }
+
+def get_collection_size(llm_mode: str):
+    match llm_mode:
+        case "ollama":
+            return 768
+        case "gemini":
+            return 3072
+        case _:
+            return 768

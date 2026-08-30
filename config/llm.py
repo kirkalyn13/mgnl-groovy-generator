@@ -16,7 +16,7 @@ def init_llm():
             case "ollama":
                 return setup_ollama()
             case "gemini":
-                return setup_gemini();
+                return setup_gemini()
             case _:
                 return setup_ollama()
         logger.info(f"🤖 Enabled LLM mode: {llm_mode}")
