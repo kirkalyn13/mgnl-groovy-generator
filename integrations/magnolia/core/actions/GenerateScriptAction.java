@@ -32,6 +32,8 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.List;
 
+import static sanofi.campus.constants.GroovyGeneratorConstants.*;
+
 /**
  * Action that generates a Groovy script based on a user query by calling an external
  * AI-powered groovy generator API, then saves the result as a node in the Magnolia scripts workspace.
@@ -40,18 +42,6 @@ public class GenerateScriptAction extends CommitAction<GenerateScriptActionDefin
 
     private final FormView<GenerateScriptActionDefinition> form;
     private final MessagesManager messages;
-    private static final String GROOVY_GENERATOR_PATH = "/groovy-generator/url";
-    private static final String API_KEY_PATH = "/groovy-generator/api-key";
-    private static final String GENERATE_PATH = "/v1/scripts/generate";
-    private static final String GROOVY_WORKSPACE = "scripts";
-    private static final String KEYSTORE_WORKSPACE = "keystore";
-    private static final String SCRIPT_NODE_TYPE = "mgnl:content";
-    private static final String PASSWORD_PROPERTY = "encryptedValue";
-    private static final String QUERY_PROPERTY = "query";
-    private static final String WORKSPACES_PROPERTY = "workspaces";
-    private static final String PROPERTIES_PROPERTY = "properties";
-    private static final String FILENAME_PREFIX = "generated-script-";
-    private static final Integer REQUEST_TIMEOUT = 120;
 
     private static final HttpClient CLIENT = HttpClient.newBuilder()
             .connectTimeout(Duration.ofSeconds(10))
@@ -90,7 +80,7 @@ public class GenerateScriptAction extends CommitAction<GenerateScriptActionDefin
         super.execute();
 
         try {
-            String query = form.getPropertyValue(QUERY_PROPERTY).orElseThrow().toString();
+            String query = String.format("%s: %s", QUERY_PREFIX, form.getPropertyValue(QUERY_PROPERTY).orElseThrow());
             List<String> workspaces = form.getPropertyValue(WORKSPACES_PROPERTY).stream().map(Object::toString).toList();
             List<String> properties = form.getPropertyValue(PROPERTIES_PROPERTY).stream().map(Object::toString).toList();
             Boolean allowModifications = ((GenerateScriptActionDefinition) this.getDefinition()).getAllowModifications();
@@ -118,6 +108,7 @@ public class GenerateScriptAction extends CommitAction<GenerateScriptActionDefin
         String body = new ObjectMapper().writeValueAsString(requestBody);
 
         HttpRequest request = HttpRequest.newBuilder()
+                .version(HttpClient.Version.HTTP_1_1)
                 .uri(URI.create(getGeneratorUrl()))
                 .header("Content-Type", "application/json")
                 .header("X-API-Key", getKeystoreValue(API_KEY_PATH))

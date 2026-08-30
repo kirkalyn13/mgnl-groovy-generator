@@ -24,6 +24,8 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 
+import static sanofi.campus.constants.GroovyGeneratorConstants.*;
+
 /**
  * Action that sends the selected Groovy script node to the AI generator API for review
  * and displays the result as a Magnolia message bar notification.
@@ -32,12 +34,6 @@ public class ReviewScriptAction extends AbstractAction<ReviewScriptActionDefinit
 
     private final AbstractJcrNodeAdapter nodeToReview;
     private final MessagesManager messages;
-    private static final String GROOVY_GENERATOR_PATH = "/groovy-generator/url";
-    private static final String API_KEY_PATH = "/groovy-generator/api-key";
-    private static final String REVIEW_PATH = "/v1/scripts/review";
-    private static final String KEYSTORE_WORKSPACE = "keystore";
-    private static final String PASSWORD_PROPERTY = "encryptedValue";
-    private static final Integer REQUEST_TIMEOUT = 120;
 
     private static final HttpClient CLIENT = HttpClient.newBuilder()
             .connectTimeout(Duration.ofSeconds(10))
@@ -86,6 +82,7 @@ public class ReviewScriptAction extends AbstractAction<ReviewScriptActionDefinit
      */
     private ReviewResponse sendReviewRequest(String path) throws IOException, InterruptedException, RepositoryException {
         HttpRequest request = HttpRequest.newBuilder()
+                .version(HttpClient.Version.HTTP_1_1)
                 .uri(URI.create(getReviewUrl(path)))
                 .header("Content-Type", "application/json")
                 .header("X-API-Key", getKeystoreValue(API_KEY_PATH))
