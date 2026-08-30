@@ -133,8 +133,9 @@ QDRANT_API_KEY=your_qdrant_key
 COLLECTION_NAME=docs_collection_name
 LLM_MODE=preferred_llm_mode_like_ollama
 OLLAMA_URL=https://your-ollama-url
-OLLAMA_EMBEDDING_MODEL=your_embedding_model
-OLLAMA_LLM=your_ollama_llm
+GEN_AI_MODEL=your_gen_ai_model
+EMBEDDING_MODEL=your_embedding_model
+TOOL_CALL_MODEL=your_tool_calling_model
 ```
  
 ### 3. Install Python dependencies

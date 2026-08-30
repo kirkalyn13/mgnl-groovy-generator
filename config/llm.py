@@ -2,6 +2,7 @@ import os
 from dotenv import load_dotenv
 from config.logger import logger
 from config.ollama import setup_ollama
+from config.gemini import setup_gemini
 from config.logger import logger
 
 # Read preferred LLM mode from .env
@@ -14,6 +15,8 @@ def init_llm():
         match llm_mode:
             case "ollama":
                 return setup_ollama()
+            case "gemini":
+                return setup_gemini();
             case _:
                 return setup_ollama()
         logger.info(f"🤖 Enabled LLM mode: {llm_mode}")
