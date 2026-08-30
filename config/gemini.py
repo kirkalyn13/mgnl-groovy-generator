@@ -10,7 +10,7 @@ from config.settings import REQUEST_TIMEOUT
 load_dotenv()
 api_key = os.getenv("GEMINI_API_KEY")
 embedding_model = os.getenv("GEMINI_EMBEDDING_MODEL", "gemini-embedding-2-preview")
-llm = os.getenv("GEMINI_LLM", "gemini-3.6-flash")
+llm = os.getenv("GEMINI_LLM", "gemini-3.5-flash-lite")
 
 def setup_gemini():
     """Setup Gemini Configurations"""
