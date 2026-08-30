@@ -1,6 +1,7 @@
 from config.auth import verify_api_key
 from config.settings import RATE_LIMIT
 from fastapi import HTTPException, Request, Depends
+from google.genai.errors import ClientError
 from routers.base import router, limiter
 from dtos.generate import QueryRequest, QueryResponse
 from dtos.ingest import IngestRequest, IngestResponse
@@ -28,6 +29,10 @@ def generate(request: Request, body: QueryRequest):
             script=result["script"],
             retries=result["retries"],
         )
+    except ClientError as e:
+        if e.code == 429:
+            raise HTTPException(status_code=429, detail="Rate limit exceeded. Please try again shortly.")
+        raise HTTPException(status_code=502, detail="Upstream model error.")
     except ValueError as e:
         logger.warning(f"⚠️ {e}")
         raise HTTPException(status_code=400, detail=str(e))
