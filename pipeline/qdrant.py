@@ -67,21 +67,25 @@ async def init_rag_engine(llm):
     vector_store = await init_vector_store()
     index = VectorStoreIndex.from_vector_store(vector_store)
 
-    # Reranker — reorders top-k results by relevance
-    reranker = ColbertRerank(top_n=3)
-
     # Similarity threshold — filters out low confidence results
     similarity_filter = SimilarityPostprocessor(similarity_cutoff=0.5)
+    node_postprocessors = [similarity_filter]
+
+    # Reranker — reorders top-k results by relevance (disabled on memory-constrained deploys)
+    enable_rerank = os.getenv("ENABLE_RERANK", "true").lower() == "true"
+    if enable_rerank:
+        logger.info("🔀 Reranking enabled")
+        reranker = ColbertRerank(top_n=3)
+        node_postprocessors.append(reranker)
+    else:
+        logger.info("🔀 Reranking disabled")
 
     return {
         "llm": llm,
         "vector_store": vector_store,
         "query_engine": index.as_query_engine(
-            similarity_top_k=10,        # fetch more candidates for reranker to work with
-            node_postprocessors=[
-                similarity_filter,      # filter low confidence first
-                reranker,               # then rerank remaining
-            ]       
+            similarity_top_k=10,
+            node_postprocessors=node_postprocessors,
         )
     }
 

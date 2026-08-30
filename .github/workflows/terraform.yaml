@@ -21,6 +21,7 @@ env:
   TF_VAR_api_key: ${{ secrets.API_KEY }}
   TF_VAR_qdrant_url: ${{ secrets.QDRANT_URL }}
   TF_VAR_qdrant_api_key: ${{ secrets.QDRANT_API_KEY }}
+  TF_VAR_enable_rerank: ${{ vars.enable_rerank }}
   TF_VAR_magnolia_username: ${{ secrets.MAGNOLIA_USERNAME }}
   TF_VAR_magnolia_password: ${{ secrets.MAGNOLIA_PASSWORD }}
   TF_VAR_langfuse_secret_key: ${{ secrets.LANGFUSE_SECRET_KEY }}

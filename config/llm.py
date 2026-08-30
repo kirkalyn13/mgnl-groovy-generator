@@ -11,6 +11,7 @@ llm_mode = os.getenv("LLM_MODE", "ollama")
 
 def init_llm():
     """Initialized LLM used based on configured settings."""
+    logger.info(f"🤖 Enabled LLM mode: {llm_mode}")
     try:
         match llm_mode:
             case "ollama":
@@ -19,7 +20,6 @@ def init_llm():
                 return setup_gemini()
             case _:
                 return setup_ollama()
-        logger.info(f"🤖 Enabled LLM mode: {llm_mode}")
     except Exception as e:
         logger.error(f"‼️ Error encountered: {e}")
         raise

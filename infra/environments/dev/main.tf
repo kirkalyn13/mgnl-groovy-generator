@@ -46,6 +46,7 @@ module "parameter_store" {
   app_name = var.app_name
   parameters = {
     qdrant_url                         = var.qdrant_url
+    enable_rerank                      = var.enable_rerank
     collection_name                    = var.collection_name
     llm_mode                           = var.llm_mode
     ollama_url                         = var.ollama_url

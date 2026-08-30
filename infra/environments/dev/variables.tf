@@ -71,6 +71,12 @@ variable "qdrant_api_key" {
   sensitive   = true
 }
 
+variable "enable_rerank" {
+  description = "Enable or disable ColBERT Rerank"
+  type        = bool
+  sensitive   = false
+}
+
 variable "magnolia_username" {
   description = "Magnolia CMS instance username"
   type        = string
