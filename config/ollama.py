@@ -9,8 +9,8 @@ from config.settings import REQUEST_TIMEOUT
 # Load ollama env variables
 load_dotenv()
 base_url = os.getenv("OLLAMA_URL")
-embedding_model = os.getenv("OLLAMA_EMBEDDING_MODEL")
-llm = os.getenv("OLLAMA_LLM")
+embedding_model = os.getenv("EMBEDDING_MODEL")
+llm = os.getenv("GEN_AI_MODEL")
 
 def setup_ollama():
     """Setup Ollama Configurations"""

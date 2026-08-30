@@ -28,9 +28,10 @@ env:
   TF_VAR_collection_name: ${{ vars.COLLECTION_NAME }}
   TF_VAR_llm_mode: ${{ vars.LLM_MODE }}
   TF_VAR_ollama_url: ${{ vars.OLLAMA_URL }}
-  TF_VAR_ollama_embedding_model: ${{ vars.OLLAMA_EMBEDDING_MODEL }}
-  TF_VAR_ollama_llm: ${{ vars.OLLAMA_LLM }}
-  TF_VAR_tool_call_llm: ${{ vars.TOOL_CALL_LLM }}
+  TF_VAR_gemini_api_key: ${{ secrets.GEMINI_API_KEY }}
+  TF_VAR_gen_ai_model: ${{ vars.GEN_AI_MODEL }}
+  TF_VAR_embedding_model: ${{ vars.EMBEDDING_MODEL }}
+  TF_VAR_tool_call_model: ${{ vars.TOOL_CALL_MODEL }}
   TF_VAR_magnolia_scripts_rest_delivery_url: ${{ vars.MAGNOLIA_SCRIPTS_REST_DELIVERY_URL }}
   TF_VAR_langfuse_base_url: ${{ vars.LANGFUSE_BASE_URL }}
   TF_VAR_redis_url: ${{ vars.REDIS_URL }}

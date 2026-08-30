@@ -7,7 +7,7 @@ from langchain.agents import create_agent
 from tools.script import TOOLS
 
 load_dotenv()
-TOOL_LLM = os.getenv("TOOL_CALL_LLM", "qwen3.5")
+TOOL_LLM = os.getenv("TOOL_CALL_MODEL", "qwen3.5")
 
 def run_describe(script_path: str) -> str:
     """Describe a Groovy script based on its path in Magnolia."""

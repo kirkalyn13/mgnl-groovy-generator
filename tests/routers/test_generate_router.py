@@ -43,3 +43,38 @@ def test_generate_unexpected_error_returns_500(client):
 
     assert response.status_code == 500
     assert response.json()["detail"] == "error"
+
+from google.genai.errors import ClientError
+
+def test_generate_rate_limit_returns_429(client):
+    rate_limit_error = ClientError(
+        code=429,
+        response_json={"error": {"message": "quota exceeded"}},
+    )
+    with patch("routers.scripts.run_generate", side_effect=rate_limit_error):
+        response = client.post("/v1/scripts/generate", json={
+            "query": "generate a groovy script",
+            "workspaces": [],
+            "properties": [],
+            "allow_modifications": False,
+        })
+
+    assert response.status_code == 429
+    assert response.json()["detail"] == "Rate limit exceeded. Please try again shortly."
+
+
+def test_generate_upstream_error_returns_502(client):
+    server_error = ClientError(
+        code=500,
+        response_json={"error": {"message": "internal error"}},
+    )
+    with patch("routers.scripts.run_generate", side_effect=server_error):
+        response = client.post("/v1/scripts/generate", json={
+            "query": "generate a groovy script",
+            "workspaces": [],
+            "properties": [],
+            "allow_modifications": False,
+        })
+
+    assert response.status_code == 502
+    assert response.json()["detail"] == "Upstream model error."
