@@ -113,19 +113,25 @@ variable "ollama_url" {
   default     = "http://localhost:11434"
 }
 
-variable "ollama_embedding_model" {
-  description = "Embedding model name"
+variable "gemini_api_key" {
+  description = "Gemini API Key"
   type        = string
-  default     = "nomic-embed-text"
+  sensitive   = true
 }
 
-variable "ollama_llm" {
+variable "gen_ai_model" {
   description = "Gen AI model name"
   type        = string
   default     = "mistral"
 }
 
-variable "tool_call_llm" {
+variable "embedding_model" {
+  description = "Embedding model name"
+  type        = string
+  default     = "nomic-embed-text"
+}
+
+variable "tool_call_model" {
   description = "Tool calling model name"
   type        = string
   default     = "qwen3.5"

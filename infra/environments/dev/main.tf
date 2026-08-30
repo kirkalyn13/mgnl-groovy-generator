@@ -47,10 +47,11 @@ module "parameter_store" {
     qdrant_url                         = var.qdrant_url
     collection_name                    = var.collection_name
     llm_mode                           = var.llm_mode
+    gemini_api_key                     = var.gemini_api_key
     ollama_url                         = var.ollama_url
-    ollama_embedding_model             = var.ollama_embedding_model
-    ollama_llm                         = var.ollama_llm
-    tool_call_llm                      = var.tool_call_llm
+    ollama_llm                         = var.gen_ai_model
+    ollama_embedding_model             = var.embedding_model
+    tool_call_llm                      = var.tool_call_model
     magnolia_scripts_rest_delivery_url = var.magnolia_scripts_rest_delivery_url
     langfuse_base_url                  = var.langfuse_base_url
     redis_url                          = var.redis_url
