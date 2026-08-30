@@ -9,7 +9,7 @@ from config.logger import logger
 
 # Ingestion is done from local files decoupling it from Gemini or external API usage
 # This approach should be enough since ingestion is done from local files for this setup
-extraction_llm = Ollama(model="mistral", base_url=os.getenv("OLLAMA_URL"), request_timeout=60)
+extraction_llm = Ollama(model="mistral", base_url=os.getenv("OLLAMA_URL", "http://localhost:11434"), request_timeout=60)
 
 async def run_pipeline(documents: list, vector_store) -> list:
     """Assemble and run the ingestion pipeline."""
