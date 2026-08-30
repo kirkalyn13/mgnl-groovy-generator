@@ -33,6 +33,7 @@ module "secrets" {
   secrets = {
     api_key             = var.api_key
     qdrant_api_key      = var.qdrant_api_key
+    gemini_api_key      = var.gemini_api_key
     magnolia_username   = var.magnolia_username
     magnolia_password   = var.magnolia_password
     langfuse_secret_key = var.langfuse_secret_key
@@ -47,7 +48,6 @@ module "parameter_store" {
     qdrant_url                         = var.qdrant_url
     collection_name                    = var.collection_name
     llm_mode                           = var.llm_mode
-    gemini_api_key                     = var.gemini_api_key
     ollama_url                         = var.ollama_url
     ollama_llm                         = var.gen_ai_model
     ollama_embedding_model             = var.embedding_model
