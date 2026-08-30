@@ -5,7 +5,6 @@ from qdrant_client import QdrantClient, AsyncQdrantClient
 from qdrant_client.models import Distance, VectorParams
 from llama_index.vector_stores.qdrant import QdrantVectorStore
 from llama_index.core.postprocessor import SimilarityPostprocessor
-from llama_index.postprocessor.colbert_rerank import ColbertRerank
 from config.logger import logger
 
 # Setup envs
@@ -74,6 +73,7 @@ async def init_rag_engine(llm):
     # Reranker — reorders top-k results by relevance (disabled on memory-constrained deploys)
     enable_rerank = os.getenv("ENABLE_RERANK", "true").lower() == "true"
     if enable_rerank:
+        from llama_index.postprocessor.colbert_rerank import ColbertRerank
         logger.info("🔀 Reranking enabled")
         reranker = ColbertRerank(top_n=3)
         node_postprocessors.append(reranker)
