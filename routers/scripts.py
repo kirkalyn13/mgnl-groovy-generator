@@ -17,7 +17,7 @@ from config.logger import logger
     summary="Generate Groovy scripts",
     description="Generate Groovy scripts based from the specified query.",
     dependencies=[Depends(verify_api_key)])
-@limiter.limit(RATE_LIMIT)
+@limiter.limit(RATE_LIMIT, key_func=lambda: "global")
 def generate(request: Request, body: QueryRequest):
     """Router for script generation"""
     try:
@@ -42,7 +42,7 @@ def generate(request: Request, body: QueryRequest):
     summary="Ingest Groovy scripts",
     description="Loads and embeds Groovy scripts from the data folder into Qdrant.",
     dependencies=[Depends(verify_api_key)])
-@limiter.limit(RATE_LIMIT)
+@limiter.limit(RATE_LIMIT, key_func=lambda: "global")
 async def ingest(request: Request, body: IngestRequest):
     """Router for scripts document ingestion"""
     try:
@@ -61,7 +61,7 @@ async def ingest(request: Request, body: IngestRequest):
     description="Returns a natural language code review of a Groovy script at the given path.",
     dependencies=[Depends(verify_api_key)]
 )
-@limiter.limit(RATE_LIMIT)
+@limiter.limit(RATE_LIMIT, key_func=lambda: "global")
 def review(request: Request, script_path: str):
     """Router for script review"""
     try:
@@ -85,7 +85,7 @@ def review(request: Request, script_path: str):
     description="Returns a natural language description of a Groovy script at the given path.",
     dependencies=[Depends(verify_api_key)]
 )
-@limiter.limit(RATE_LIMIT)
+@limiter.limit(RATE_LIMIT, key_func=lambda: "global")
 def describe(request: Request, script_path: str):
     """Router for script description"""
     try:
