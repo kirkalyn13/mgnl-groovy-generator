@@ -12,7 +12,7 @@ from config.logger import logger
 load_dotenv()
 url = os.getenv("QDRANT_URL")
 api_key = os.getenv("QDRANT_API_KEY")
-llm_mode = os.getenv("LLM_MODE")
+llm_mode = os.getenv("LLM_MODE", "ollama")
 collection_name = os.getenv("COLLECTION_NAME", "magnolia_groovies") + "_" + llm_mode
 
 # Setup Client
