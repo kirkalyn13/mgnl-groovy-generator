@@ -99,8 +99,8 @@ flowchart RL
 - Input guard rails — blocks non-Groovy and modification requests, if disabled (default)
 - Output guard rails — validates and sanitizes generated scripts
 - Retry logic — automatically retries if output contains unwanted content
-- Rate limiting — 1 request per second per client
-- Fully local — runs entirely on your machine with no cloud API required
+- Dual LLM support — run fully local via Ollama, or use the Gemini API (free tier, no credit card)
+- Rate limiting — global request throttling to protect shared API quotas
 - Session Memory - remembers session requests to refine succeeding queries
 
 ## Prerequisites
@@ -127,17 +127,43 @@ cp .env.example .env
 ```
  
 Edit `.env`:
- 
+
 ```env
+# API Keys
+API_KEYS=your-secret-key-1,your-secret-key-2 # For explicitly limiting consumers
+
+# QDrant Config
 QDRANT_URL=https://your-cluster-url
 QDRANT_API_KEY=your_qdrant_key
 COLLECTION_NAME=docs_collection_name
+
+# Retrieval Config
+ENABLE_RERANK=set_true_to_enable_colBERT_rerank
+
+# LLM Config
 LLM_MODE=ollama_or_gemini
+GEMINI_API_KEY=your_gemini_api_key # Required if gemini mode is enabled
 OLLAMA_URL=https://your-ollama-url
-GEMINI_API_KEY=your_gemini_api_key
 GEN_AI_MODEL=your_gen_ai_model
 EMBEDDING_MODEL=your_embedding_model
-TOOL_CALL_MODEL=your_tool_calling_model
+TOOL_CALL_MODEL=your_tool_calling_llm
+
+# Magnolia Config
+MAGNOLIA_SCRIPTS_REST_DELIVERY_URL=your_scripts_rest_delivery_path
+MAGNOLIA_USERNAME=your_username
+MAGNOLIA_PASSWORD=your_password
+
+# LangFuse Config
+LANGFUSE_PUBLIC_KEY=pk-lf-...
+LANGFUSE_SECRET_KEY=sk-lf-...
+LANGFUSE_BASE_URL=https://cloud.langfuse.com
+
+# Memory Config
+## Redis Config — leave blank or omit to use in-memory
+REDIS_URL=redis://localhost:6379
+SESSION_TTL_MINUTES=30
+## In-memory Config:
+SESSION_SIZE=10
 ```
 
 > **Note:** `LLM_MODE` selects the provider (`ollama` or `gemini`) and determines the Qdrant collection suffix (`{COLLECTION_NAME}_{LLM_MODE}`), since embedding dimensions differ between providers (768 for Ollama, 3072 for Gemini) and must live in separate collections.
@@ -311,16 +337,6 @@ This app uses [Langfuse](https://langfuse.com) to trace and monitor the RAG pipe
 
 > [!NOTE]
 > Langfuse is optional. The app will run without it if no keys are configured.
-
-### Setup
-
-Add the following to your `.env`:
-
-```env
-LANGFUSE_PUBLIC_KEY=pk-lf-...
-LANGFUSE_SECRET_KEY=sk-lf-...
-LANGFUSE_BASE_URL=https://cloud.langfuse.com
-```
 
 Get your keys from [cloud.langfuse.com](https://cloud.langfuse.com) — a free tier is available with 50,000 traces/month, no credit card required.
 
