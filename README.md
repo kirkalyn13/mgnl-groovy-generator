@@ -37,7 +37,7 @@ A reference implementation is available in [`./integrations/magnolia`](./integra
 |---|---|
 | Frontend | React, Vite, Tailwind CSS |
 | Backend | FastAPI, Python |
-| LLM & Embeddings | Ollama (`mistral`, `nomic-embed-text`, `qwen3.5`) |
+| LLM & Embeddings | Ollama (`mistral`, `nomic-embed-text`, `qwen3.5`) or Gemini API (`gemini-3.6-flash`, `gemini-embedding-2-preview`, `gemini-3.5-flash-lite`) |
 | Vector Store | Qdrant |
 | RAG Framework | LlamaIndex |
 | CMS Integration | Magnolia CMS |
@@ -107,8 +107,9 @@ flowchart RL
 
 - Python 3.11+
 - Node.js 18+
-- [Ollama](https://ollama.com) installed and running
+- [Ollama](https://ollama.com) installed and running, **or** a [Gemini API key](https://aistudio.google.com) (free tier, no credit card)
 - Redis (Optional)
+- Docker (Optional)
 
 ## Getting Started
  
@@ -131,12 +132,15 @@ Edit `.env`:
 QDRANT_URL=https://your-cluster-url
 QDRANT_API_KEY=your_qdrant_key
 COLLECTION_NAME=docs_collection_name
-LLM_MODE=preferred_llm_mode_like_ollama
+LLM_MODE=ollama_or_gemini
 OLLAMA_URL=https://your-ollama-url
+GEMINI_API_KEY=your_gemini_api_key
 GEN_AI_MODEL=your_gen_ai_model
 EMBEDDING_MODEL=your_embedding_model
 TOOL_CALL_MODEL=your_tool_calling_model
 ```
+
+> **Note:** `LLM_MODE` selects the provider (`ollama` or `gemini`) and determines the Qdrant collection suffix (`{COLLECTION_NAME}_{LLM_MODE}`), since embedding dimensions differ between providers (768 for Ollama, 3072 for Gemini) and must live in separate collections.
  
 ### 3. Install Python dependencies
  
@@ -146,20 +150,26 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
  
-### 4. Pull Ollama models
- 
-```bash
-ollama pull mistral # For generative AI functions
-ollama pull nomic-embed-text # For embedding
-ollam pull qwen3.5  # For tool calling
-```
+### 4. Pull Ollama models (if using `LLM_MODE=ollama`)
+
+​```bash
+ollama pull mistral       # For generative AI functions
+ollama pull nomic-embed-text  # For embedding
+ollama pull qwen3.5       # For tool calling
+​```
+
+If using `LLM_MODE=gemini`, no local pulls needed — just set `GEMINI_API_KEY` in `.env`.
  
 ### 5. Ingest your Groovy scripts
- 
-Add your `.groovy` example files to the `data/` folder, then run:
- 
-```bash
-python ingest.py
+
+Add your `.groovy` example files to the `data/` folder, then start the API and trigger ingestion via:
+
+**`POST /v1/scripts/ingest`**
+
+```json
+{
+    "path": "./data"
+}
 ```
  
 ### 6. Start the API
@@ -288,7 +298,7 @@ python -m cli --path ./data
 
 **Chunk** — Splits scripts into 512-token overlapping nodes using `SentenceSplitter` so large scripts are retrievable at a granular level.
 
-**Embed** — Generates vector embeddings using `nomic-embed-text` via Ollama.
+**Embed** — Generates vector embeddings via the configured provider (`nomic-embed-text` on Ollama, or `gemini-embedding-2-preview` on Gemini).
 
 **Store** — Upserts nodes into Qdrant with deduplication — unchanged scripts are skipped on re-ingestion.
 
@@ -316,7 +326,6 @@ Get your keys from [cloud.langfuse.com](https://cloud.langfuse.com) — a free t
 
 ## Improvements
 
-- Use a larger, more powerful model e.g. OpenAI gpt models
 - Ingest more well-documented and labeled Groovy scripts.
 
 ## Infrastructure (`/infra`)
