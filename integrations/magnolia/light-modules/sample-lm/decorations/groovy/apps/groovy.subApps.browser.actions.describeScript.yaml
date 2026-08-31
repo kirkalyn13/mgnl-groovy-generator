@@ -1,5 +1,5 @@
 label: Describe Script
-icon: icon-instant_preview
+icon: icon-content-item
 $type: describeScriptAction
 availability:
   nodeTypes:
