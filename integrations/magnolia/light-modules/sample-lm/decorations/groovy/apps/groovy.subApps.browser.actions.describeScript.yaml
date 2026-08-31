@@ -1,6 +1,6 @@
 label: Describe Script
 icon: icon-instant_preview
-$type: reviewScriptAction
+$type: describeScriptAction
 availability:
   nodeTypes:
     - mgnl:content
