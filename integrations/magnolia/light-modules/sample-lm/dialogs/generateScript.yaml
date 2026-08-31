@@ -1,6 +1,11 @@
 label: Generate Groovy Script (AI-Assisted)
 form:
   properties:
+    name:
+      $type: slugField
+      description: Unique name for the Groovy script. Make sure value is not yet taken.
+      label: Name
+      required: true
     query:
       $type: textField
       description: Prompt for AI-assisted script generation

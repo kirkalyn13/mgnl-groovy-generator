@@ -71,7 +71,7 @@ public class GenerateScriptAction extends CommitAction<GenerateScriptActionDefin
     }
 
     /**
-     * Validates the form, reads query, workspaces, and properties, calls the generator API,
+     * Validates the form, reads name, query, workspaces, and properties, calls the generator API,
      * saves the resulting script, and notifies the user on success.
      */
     @Override
@@ -80,13 +80,14 @@ public class GenerateScriptAction extends CommitAction<GenerateScriptActionDefin
         super.execute();
 
         try {
+            String scriptName = form.getPropertyValue(SCRIPT_NAME_PROPERTY).orElseThrow().toString();
             String query = String.format("%s: %s", QUERY_PREFIX, form.getPropertyValue(QUERY_PROPERTY).orElseThrow());
             List<String> workspaces = form.getPropertyValue(WORKSPACES_PROPERTY).stream().map(Object::toString).toList();
             List<String> properties = form.getPropertyValue(PROPERTIES_PROPERTY).stream().map(Object::toString).toList();
             Boolean allowModifications = ((GenerateScriptActionDefinition) this.getDefinition()).getAllowModifications();
 
             GenerateResponse response = sendGenerateRequest(query, workspaces, properties, allowModifications);
-            saveGeneratedScript(response.script());
+            saveGeneratedScript(scriptName, response.script());
             String resultMessage = String.format("Successfully Generated Script: \n %s", response.script());
             messages.sendLocalMessage(new Message(MessageType.INFO, "Script Generated", resultMessage));
         } catch (Exception e) {
@@ -143,17 +144,18 @@ public class GenerateScriptAction extends CommitAction<GenerateScriptActionDefin
     }
 
     /**
-     * Saves the generated script as a {@code mgnl:content} node in the scripts workspace.
-     * Node is named with a timestamp prefix to ensure uniqueness.
+     * Saves the generated script as a {@code mgnl:content} node in the scripts workspace with the given script name.
      *
+     * @param scriptName preferred groovy script name.
      * @param code The generated Groovy script content.
      */
-    private void saveGeneratedScript(String code) throws RepositoryException {
+    private void saveGeneratedScript(String scriptName, String code) throws RepositoryException {
         Session session = MgnlContext.getJCRSession(GROOVY_WORKSPACE);
-        String nodeName = FILENAME_PREFIX + System.currentTimeMillis();
 
         Node rootNode = session.getRootNode();
-        Node scriptNode = rootNode.addNode(nodeName, SCRIPT_NODE_TYPE);
+        Node scriptNode = rootNode.addNode(
+                scriptName.trim().replace(" ","-"),
+                SCRIPT_NODE_TYPE);
         scriptNode.setProperty("script", true);
         scriptNode.setProperty("text", code);
 

@@ -13,13 +13,14 @@ public final class GroovyGeneratorConstants {
     // API paths
     public static final String GENERATE_PATH = "/v1/scripts/generate";
     public static final String REVIEW_PATH = "/v1/scripts/review";
+    public static final String DESCRIBE_PATH = "/v1/scripts/describe";
 
     // Scripts workspace
     public static final String GROOVY_WORKSPACE = "scripts";
     public static final String SCRIPT_NODE_TYPE = "mgnl:content";
-    public static final String FILENAME_PREFIX = "generated-script-";
 
     // Form properties
+    public static final String SCRIPT_NAME_PROPERTY = "name";
     public static final String QUERY_PROPERTY = "query";
     public static final String WORKSPACES_PROPERTY = "workspaces";
     public static final String PROPERTIES_PROPERTY = "properties";
