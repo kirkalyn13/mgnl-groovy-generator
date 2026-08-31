@@ -7,10 +7,11 @@ This module integrates the Magnolia Groovy Generator API into Magnolia CMS as a 
 
 ## Dialog
 
-The dialog (`generateScript.yaml`) exposes three fields:
+The dialog (`generateScript.yaml`) exposes four fields:
 
 | Field | Type | Description |
 |---|---|---|
+| `name` | Text area | Desired script name |
 | `query` | Text area | Natural language prompt describing the desired script |
 | `workspaces` | Multi-value | JCR workspace names to scope the script (e.g. `website`, `dam`) |
 | `properties` | Multi-value | JCR property names the script should reference |
@@ -23,7 +24,7 @@ The dialog (`generateScript.yaml`) exposes three fields:
 - Reads field values from the dialog form
 - Sends a `POST` request to the configured generator API
 - Parses the JSON response
-- Saves the script as a timestamped `mgnl:content` node in the `scripts` workspace
+- Saves the script as a `mgnl:content` node in the `scripts` workspace
 - Sends a Magnolia message bar notification on success
 
 
@@ -69,7 +70,7 @@ sections:
 ## Notes
 
 - `allowModifications: false` is set on the action definition — the API will reject any query that attempts to modify, delete, or update content
-- The generated script node is named with a `generated-script-` prefix and a timestamp to ensure uniqueness
+- The generated script node name must be unique or not yet taken
 - The action has a 120 second timeout to account for local LLM generation time
 
 ## Other Integrations
@@ -81,14 +82,12 @@ sections:
 - Sends a `GET` request to review the groovy script pulled from `/{script_path}`
 - Sends a Magnolia message bar notification on success and review details
 
-> Scripts should be exposed via REST Delivery (see [scripts REST Delivery config](./light-modules/sample-lm/restEndpoints/delivery/scripts_v1.yaml)) and the request URL is specified in the `.env` file
-
 ### Sample Response consumed from `GET /v1/scripts/review/{script_path}`:
 ```json
 {
     "success": true,
     "path": "magnoliaModulesDependencies",
-    "description": "Here's a code review for the provided Magnolia CMS Groovy script:\n\n1. **Naming Conventions**: Adhere to consistent naming conventions throughout the script..."
+    "review": "Here's a code review for the provided Magnolia CMS Groovy script:\n\n1. **Naming Conventions**: Adhere to consistent naming conventions throughout the script..."
 }
 ```
 
@@ -99,7 +98,35 @@ reviewScript:
   icon: icon-instant_preview
   $type: reviewScriptAction
   availability:
-    writePermissionRequired: true
     nodeTypes:
       - mgnl:content
 ```
+
+### Groovy Script Describe Script API
+
+[`DescribeScriptAction.java`](./core/actions/DescribeScriptAction.java) extends Magnolia's `AbstractAction` and:
+
+- Sends a `GET` request to describe or explain the groovy script pulled from `/{script_path}`
+- Sends a Magnolia message bar notification on success and review details
+
+### Sample Response consumed from `GET /v1/scripts/describe/{script_path}`:
+```json
+{
+    "success": true,
+    "path": "magnoliaModulesDependencies",
+    "description": "This Groovy script is a utility for inspecting Magnolia module dependencies and version information..."
+}
+```
+
+### Action Definition:
+```yaml
+describeScript:
+  label: Describe Script
+  icon: icon-content-item
+  $type: describeScriptAction
+  availability:
+    nodeTypes:
+      - mgnl:content
+```
+
+> **Note:** Scripts should be exposed via REST Delivery (see [scripts REST Delivery config](./light-modules/sample-lm/restEndpoints/delivery/scripts_v1.yaml)) and the request URL is specified in the `.env` file
