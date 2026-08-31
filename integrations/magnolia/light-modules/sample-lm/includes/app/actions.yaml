@@ -7,11 +7,3 @@ generateScript:
   availability:
     writePermissionRequired: true
     root: true
-reviewScript:
-  label: Review Script
-  icon: icon-instant_preview
-  $type: reviewScriptAction
-  availability:
-    writePermissionRequired: true
-    nodeTypes:
-      - mgnl:content
