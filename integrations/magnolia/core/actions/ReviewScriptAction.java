@@ -3,9 +3,6 @@ package com.sample.cms.actions;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import info.magnolia.cms.security.SecurityUtil;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.jcr.util.PropertyUtil;
 import info.magnolia.ui.api.action.AbstractAction;
 import info.magnolia.ui.api.action.ActionExecutionException;
 import info.magnolia.ui.api.message.Message;
@@ -16,7 +13,6 @@ import info.magnolia.ui.vaadin.integration.jcr.AbstractJcrNodeAdapter;
 import javax.inject.Inject;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
-import javax.jcr.Session;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -25,6 +21,8 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 
 import static sanofi.campus.constants.GroovyGeneratorConstants.*;
+import static sanofi.campus.helpers.GroovyGeneratorHelpers.getGroovyGeneratorUrl;
+import static sanofi.campus.helpers.GroovyGeneratorHelpers.getKeystoreValue;
 
 /**
  * Action that sends the selected Groovy script node to the AI generator API for review
@@ -83,7 +81,7 @@ public class ReviewScriptAction extends AbstractAction<ReviewScriptActionDefinit
     private ReviewResponse sendReviewRequest(String path) throws IOException, InterruptedException, RepositoryException {
         HttpRequest request = HttpRequest.newBuilder()
                 .version(HttpClient.Version.HTTP_1_1)
-                .uri(URI.create(getReviewUrl(path)))
+                .uri(URI.create(getGroovyGeneratorUrl(REVIEW_PATH, path)))
                 .header("Content-Type", "application/json")
                 .header("X-API-Key", getKeystoreValue(API_KEY_PATH))
                 .timeout(Duration.ofSeconds(REQUEST_TIMEOUT))
@@ -112,29 +110,6 @@ public class ReviewScriptAction extends AbstractAction<ReviewScriptActionDefinit
                 root.path("success").asBoolean(),
                 root.path("path").asText(),
                 root.path("review").asText());
-    }
-
-    /**
-     * Retrieves and decrypts the groovy generator keystore values.
-     *
-     * @return the decrypted keystore value
-     */
-    private static String getKeystoreValue(String path) throws RepositoryException {
-        Session session = MgnlContext.getJCRSession(KEYSTORE_WORKSPACE);
-        Node tokenNode = session.getNode(path);
-        String encryptedToken = PropertyUtil.getString(tokenNode, PASSWORD_PROPERTY);
-
-        return SecurityUtil.decrypt(encryptedToken);
-    }
-
-    /**
-     * Builds the full review API URL for the given script path.
-     *
-     * @param path JCR path of the script node.
-     * @return Full URL string for the review endpoint.
-     */
-    private String getReviewUrl(String path) throws RepositoryException {
-        return String.format("%s%s%s", getKeystoreValue(GROOVY_GENERATOR_PATH), REVIEW_PATH, path);
     }
 
     /** Response payload received from the review API. */
