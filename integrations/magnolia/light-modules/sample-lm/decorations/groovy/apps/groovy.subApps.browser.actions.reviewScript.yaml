@@ -1,0 +1,6 @@
+label: Review Script
+icon: icon-instant_preview
+$type: reviewScriptAction
+availability:
+  nodeTypes:
+    - mgnl:content
