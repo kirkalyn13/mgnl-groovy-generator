@@ -27,6 +27,31 @@ The dialog (`generateScript.yaml`) exposes four fields:
 - Saves the script as a `mgnl:content` node in the `scripts` workspace
 - Sends a Magnolia message bar notification on success
 
+## Setup
+
+### Module Descriptor Requirement
+
+The Groovy app's `browser` view needs two components registered in the module descriptor, or triggering the dialog will fail with a Guice `NoSuchComponentException`:
+
+```xml
+<components>
+  <id>app-groovy-browser</id>
+  <component>
+    <type>info.magnolia.ui.datasource.PropertySetFactory</type>
+    <implementation>info.magnolia.ui.contentapp.JcrPropertySetFactory</implementation>
+  </component>
+  <component>
+    <type>info.magnolia.ui.field.SelectFieldSupport</type>
+    <implementation>info.magnolia.ui.field.JcrSelectFieldSupport</implementation>
+  </component>
+</components>
+```
+
+Add this alongside your other `<components>` blocks in the module descriptor before deploying.
+
+### Browser Refresh Behavior
+
+After a script is generated, the Groovy app's browser view performs a full page reload to show the new script. This is expected — the underlying browser view has no built-in mechanism to refresh in place after content changes made outside its normal save flow.
 
 ## Configuration
 

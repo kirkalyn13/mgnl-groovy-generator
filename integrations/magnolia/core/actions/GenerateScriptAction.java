@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.vaadin.ui.UI;
 import info.magnolia.cms.security.SecurityUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.jcr.util.PropertyUtil;
@@ -32,7 +33,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.List;
 
-import static sanofi.campus.constants.GroovyGeneratorConstants.*;
+import static com.sample.cms.constants.GroovyGeneratorConstants.*;
 
 /**
  * Action that generates a Groovy script based on a user query by calling an external
@@ -160,6 +161,7 @@ public class GenerateScriptAction extends CommitAction<GenerateScriptActionDefin
         scriptNode.setProperty("text", code);
 
         session.save();
+        refreshBrowser();
     }
 
     /**
@@ -180,8 +182,16 @@ public class GenerateScriptAction extends CommitAction<GenerateScriptActionDefin
      *
      * @return Generator URL string.
      */
-    private String getGeneratorUrl() throws RepositoryException {
+    private static String getGeneratorUrl() throws RepositoryException {
         return getKeystoreValue(GROOVY_GENERATOR_PATH) + GENERATE_PATH;
+    }
+
+    /**
+     * Forces a full AdminCentral page reload so the newly created script node
+     * is reflected in the browser.
+     */
+    private static void refreshBrowser() {
+        UI.getCurrent().getPage().reload();
     }
 
     /** Request payload sent to the generator API. */

@@ -20,9 +20,9 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 
-import static sanofi.campus.constants.GroovyGeneratorConstants.*;
-import static sanofi.campus.helpers.GroovyGeneratorHelpers.getGroovyGeneratorUrl;
-import static sanofi.campus.helpers.GroovyGeneratorHelpers.getKeystoreValue;
+import static com.sample.cms.constants.GroovyGeneratorConstants.*;
+import static com.sample.cms.helpers.GroovyGeneratorHelpers.getGroovyGeneratorUrl;
+import static com.sample.cms.helpers.GroovyGeneratorHelpers.getKeystoreValue;
 
 /**
  * Action that sends the selected Groovy script node to the AI generator API for review
