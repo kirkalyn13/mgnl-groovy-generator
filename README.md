@@ -5,7 +5,8 @@ A RAG-powered web app for generating Magnolia CMS Groovy scripts using natural l
 Live Site: [mgnl-groovy-generator-app](https://mgnl-groovy-generator-app.vercel.app/)
 
 ![Demo](./assets/app-demo.gif)
-[▶ Watch Demo](https://drive.google.com/file/d/1pTJBK1EGd-dfmM8mIvov_rrAEOrY8xE7/view?usp=sharing)
+
+[▶ Watch Demo](https://drive.google.com/file/d/1a0-2MhMqQu2rp6Vvo1Xky-c1rMaCmM5D/view?usp=sharing)
 
 ## Overview
 
@@ -16,7 +17,8 @@ Magnolia Groovy Generator is a full-stack portfolio project that combines a Fast
 Beyond the web UI, the generator can be integrated directly into Magnolia CMS as a **custom action** — allowing editors and developers to generate and execute Groovy scripts without leaving the CMS.
 
 ![Magnolia Integration Demo](./assets/mgnl-demo.gif)
-[▶ Watch Demo](https://drive.google.com/file/d/12dixAMERaaCbuTUxM14ih4Z9g-1qXISh/view?usp=sharing)
+
+[▶ Watch Demo](https://drive.google.com/file/d/1HYSU9yFjMvkNY-6zNywb2aNtxjTI8IRw/view?usp=sharing)
 
 ### Sample Code
 
