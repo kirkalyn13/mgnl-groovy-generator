@@ -70,7 +70,7 @@ async def ingest(request: Request, body: IngestRequest):
 def review(request: Request, script_path: str):
     """Router for script review"""
     try:
-        result = run_review(script_path)
+        result = run_review(request, script_path)
         return ReviewResponse(
             success=True,
             path=script_path,
@@ -94,7 +94,7 @@ def review(request: Request, script_path: str):
 def describe(request: Request, script_path: str):
     """Router for script description"""
     try:
-        result = run_describe(script_path)
+        result = run_describe(request, script_path)
         return DescribeResponse(
             success=True,
             path=script_path,

@@ -25,7 +25,8 @@ def test_run_describe_returns_last_message_content(mock_get_client, mock_chat_ol
     }
     mock_create_agent.return_value = mock_agent
 
-    result = describe.run_describe("/modules/site/pages/home")
+    mock_request = MagicMock()
+    result = describe.run_describe(mock_request, "/modules/site/pages/home")
 
     assert result == "This script fetches the page title."
 
@@ -39,7 +40,8 @@ def test_run_describe_invokes_agent_with_script_path_in_prompt(mock_get_client, 
     mock_agent.invoke.return_value = {"messages": [make_message("ok")]}
     mock_create_agent.return_value = mock_agent
 
-    describe.run_describe("/modules/site/pages/home")
+    mock_request = MagicMock()
+    describe.run_describe(mock_request, "/modules/site/pages/home")
 
     sent_content = mock_agent.invoke.call_args[0][0]["messages"][0]["content"]
     assert "/modules/site/pages/home" in sent_content
@@ -54,7 +56,8 @@ def test_run_describe_builds_agent_with_tools_and_tool_llm(mock_get_client, mock
     mock_agent.invoke.return_value = {"messages": [make_message("ok")]}
     mock_create_agent.return_value = mock_agent
 
-    describe.run_describe("/some/path")
+    mock_request = MagicMock()
+    describe.run_describe(mock_request, "/some/path")
 
     mock_chat_ollama.assert_called_once_with(model=describe.TOOL_LLM, temperature=0)
     mock_create_agent.assert_called_once_with(model=mock_chat_ollama.return_value, tools=describe.TOOLS)
@@ -71,6 +74,7 @@ def test_run_describe_propagates_and_logs_on_exception(mock_logger, mock_get_cli
     mock_create_agent.return_value = mock_agent
 
     with pytest.raises(RuntimeError, match="agent error"):
-        describe.run_describe("/broken/path")
+        mock_request = MagicMock()
+        describe.run_describe(mock_request, "/broken/path")
 
     mock_logger.error.assert_called_once()

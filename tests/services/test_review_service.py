@@ -28,7 +28,8 @@ def test_run_review_returns_review_llm_content(mock_get_client, mock_chat_ollama
 
     mock_review_llm.invoke.return_value = make_message("Looks good, minor naming nits.")
 
-    result = review.run_review("/modules/site/pages/home")
+    mock_request = MagicMock()
+    result = review.run_review(mock_request, "/modules/site/pages/home")
 
     assert result == "Looks good, minor naming nits."
 
@@ -46,7 +47,8 @@ def test_run_review_fetches_script_before_reviewing(mock_get_client, mock_chat_o
     mock_create_agent.return_value = mock_tool_agent
     mock_review_llm.invoke.return_value = make_message("review")
 
-    review.run_review("/modules/site/pages/home")
+    mock_request = MagicMock()
+    review.run_review(mock_request, "/modules/site/pages/home")
 
     fetch_prompt = mock_tool_agent.invoke.call_args[0][0]["messages"][0]["content"]
     assert "/modules/site/pages/home" in fetch_prompt
@@ -68,7 +70,8 @@ def test_run_review_builds_tool_and_review_llms_with_configured_models(mock_get_
     mock_create_agent.return_value = mock_tool_agent
     mock_review_llm.invoke.return_value = make_message("review")
 
-    review.run_review("/some/path")
+    mock_request = MagicMock()
+    review.run_review(mock_request, "/some/path")
 
     assert mock_chat_ollama.call_args_list[0].kwargs == {"model": review.TOOL_LLM, "temperature": 0}
     assert mock_chat_ollama.call_args_list[1].kwargs == {"model": review.REVIEW_LLM, "temperature": 0}
@@ -89,7 +92,8 @@ def test_run_review_propagates_and_logs_when_fetch_fails(mock_logger, mock_get_c
     mock_create_agent.return_value = mock_tool_agent
 
     with pytest.raises(RuntimeError, match="fetch error"):
-        review.run_review("/broken/path")
+        mock_request = MagicMock()
+        review.run_review(mock_request, "/broken/path")
 
     mock_logger.error.assert_called_once()
     mock_review_llm.invoke.assert_not_called()
@@ -110,6 +114,7 @@ def test_run_review_propagates_and_logs_when_review_fails(mock_logger, mock_get_
     mock_review_llm.invoke.side_effect = RuntimeError("review error")
 
     with pytest.raises(RuntimeError, match="review error"):
-        review.run_review("/some/path")
+        mock_request = MagicMock()
+        review.run_review(mock_request, "/some/path")
 
     mock_logger.error.assert_called_once()
