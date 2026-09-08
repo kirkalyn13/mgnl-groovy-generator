@@ -24,7 +24,7 @@ Beyond the web UI, the generator can be integrated directly into Magnolia CMS as
 
 A reference implementation is available in [`./integrations/magnolia`](./integrations/magnolia), including:
 
-- Custom action class calling the `/v1/generate` endpoint
+- Custom action class calling the `/v1/scripts/generate` endpoint
 - Action definition YAML for registering the action in a Magnolia app
 
 ### Prerequisites
@@ -67,8 +67,9 @@ flowchart RL
     end
 
     CLIENTS -->|"HTTP Request"| REST["🌐 REST API
-    POST /v1/generate
-    POST /v1/ingest"]
+    POST /v1/scripts/generate
+    POST /v1/scripts/ingest"
+    etc...]
     REST --> FASTAPI["⚡ FastAPI Server"]
     FASTAPI --> OLLAMA["🦙 Ollama LLM
     mistral · nomic-embed-text"]
@@ -92,6 +93,17 @@ flowchart RL
     style MEMORY fill:#f0fdf4,stroke:#16a34a,stroke-width:2px,color:#000000
     style SESSION fill:#ffffff,stroke:#e11d48,stroke-width:1px,stroke-dasharray:5,color:#000000
 ```
+
+The system exposes a standalone REST API consumed by two independent clients — a React + Vite UI and a Magnolia CMS Custom Action.
+
+**Loosely coupled by design:**
+
+- Magnolia integrates via HTTP (`POST /v1/scripts/generate`, `POST /v1/scripts/ingest`)
+- Inference and retrieval — Ollama (mistral, nomic-embed-text) or Gemini for generation/embeddings, Qdrant for vector search — lives entirely behind the FastAPI service
+- Session state is externalized to Redis (or in-memory fallback), and observability runs through Langfuse — both independent of either client
+- Clients are interchangeable: the React UI and the Magnolia action can be added, removed, or redeployed without any change to the API or backend
+
+This keeps Magnolia CMS lightweight — it stays a pure HTTP client, with zero GenAI compute or dependency footprint pushed onto it.
 
 ## Features
 
