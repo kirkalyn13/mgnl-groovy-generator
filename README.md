@@ -158,7 +158,7 @@ MAGNOLIA_PASSWORD=your_password
 # LangFuse Config
 LANGFUSE_PUBLIC_KEY=pk-lf-...
 LANGFUSE_SECRET_KEY=sk-lf-...
-LANGFUSE_BASE_URL=https://cloud.langfuse.com
+LANGFUSE_HOST=https://cloud.langfuse.com
 
 # Memory Config
 ## Redis Config — leave blank or omit to use in-memory

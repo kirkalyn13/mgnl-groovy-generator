@@ -149,7 +149,7 @@ variable "magnolia_scripts_rest_delivery_url" {
   default     = "http://127.0.0.1:8080/.rest/delivery/scripts/v1"
 }
 
-variable "langfuse_base_url" {
+variable "langfuse_host" {
   description = "Langfuse base URL"
   type        = string
   default     = "https://us.cloud.langfuse.com"

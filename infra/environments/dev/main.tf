@@ -54,7 +54,7 @@ module "parameter_store" {
     ollama_embedding_model             = var.embedding_model
     tool_call_llm                      = var.tool_call_model
     magnolia_scripts_rest_delivery_url = var.magnolia_scripts_rest_delivery_url
-    langfuse_base_url                  = var.langfuse_base_url
+    langfuse_host                      = var.langfuse_host
     redis_url                          = var.redis_url
     session_ttl_minutes                = var.session_ttl_minutes
     session_size                       = var.session_size
