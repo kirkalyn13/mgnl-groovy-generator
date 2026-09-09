@@ -52,8 +52,10 @@ async def ingest(request: Request, body: IngestRequest):
     """Router for scripts document ingestion"""
     try:
         path = body.path
+        source = body.source or ""
         vector_store = request.app.state.vector_store
-        ingested_files = await run_ingest(vector_store, path)
+
+        ingested_files = await run_ingest(vector_store, source, path)
         response = f"Successfully ingested {ingested_files} documents."
 
         return IngestResponse(success=True, message=response)

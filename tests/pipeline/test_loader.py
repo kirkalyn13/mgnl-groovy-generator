@@ -48,3 +48,55 @@ def test_load_documents_logs_loaded_count(mock_logger, mock_reader_cls):
 
     assert mock_logger.info.call_count == 2
     assert "3" in mock_logger.info.call_args_list[1][0][0]
+
+def test_convert_to_document_maps_fields_correctly():
+    data = [{"@name": "myScript.groovy", "text": "println 'hi'"}]
+    result = loader.convert_to_document(data)
+
+    assert len(result) == 1
+    doc = result[0]
+    assert doc.text == "println 'hi'"
+    assert doc.metadata["file_name"] == "myScript.groovy"
+    assert doc.metadata["script_name"] == "myScript"
+    assert doc.metadata["file_type"] == ".groovy"
+    assert doc.metadata["source"] == "magnolia_cms"
+    assert "ingested_at" in doc.metadata
+
+
+def test_convert_to_document_handles_missing_name():
+    data = [{"text": "println 'no name'"}]
+    result = loader.convert_to_document(data)
+
+    assert result[0].metadata["file_name"] == ""
+    assert result[0].metadata["script_name"] == ""
+
+
+def test_convert_to_document_handles_missing_text():
+    data = [{"@name": "empty.groovy"}]
+    result = loader.convert_to_document(data)
+
+    assert result[0].text == ""
+
+
+def test_convert_to_document_handles_empty_list():
+    assert loader.convert_to_document([]) == []
+
+
+def test_convert_to_document_excluded_metadata_keys():
+    data = [{"@name": "a.groovy", "text": "x"}]
+    doc = loader.convert_to_document(data)[0]
+
+    assert doc.excluded_embed_metadata_keys == ["ingested_at", "source"]
+    assert doc.excluded_llm_metadata_keys == ["ingested_at"]
+
+
+def test_convert_to_document_multiple_items():
+    data = [
+        {"@name": "a.groovy", "text": "x"},
+        {"@name": "b.groovy", "text": "y"},
+    ]
+    result = loader.convert_to_document(data)
+
+    assert len(result) == 2
+    assert result[0].metadata["file_name"] == "a.groovy"
+    assert result[1].metadata["file_name"] == "b.groovy"

@@ -39,4 +39,30 @@ def fetch_script(script_path: str) -> str:
 
     return text
 
-TOOLS = [fetch_script]
+@tool
+def fetch_scripts(script_path: str) -> list:
+    """Fetch groovy scripts from the Magnolia REST Delivery API.
+
+    Args:
+        script_path: The relative path to the script nodes in Magnolia e.g. my-script
+
+    Returns:
+        A list containing the Magnolia REST Delivery API script payload.
+    """
+    endpoint = f"{MAGNOLIA_URL}/{script_path}"
+    logger.info(f"🌐 Fetching script from: {endpoint}")
+
+    response = httpx.get(endpoint, timeout=REQUEST_TIMEOUT, auth=(MAGNOLIA_USERNAME, MAGNOLIA_PASSWORD))
+
+    if response.status_code == 404:
+        raise FileNotFoundError(f"Scripts not found at path: {script_path}")
+
+    if response.status_code != 200:
+        raise Exception(f"Failed to fetch scripts: {response.status_code} — {response.text}")
+
+    data = response.json()
+    scripts = data["results"]
+
+    return scripts
+
+TOOLS = [fetch_script, fetch_scripts]

@@ -4,7 +4,7 @@ from config.logger import logger
 def add_metadata(documents: list) -> list:
     """Enrich documents with custom metadata fields."""
     for doc in documents:
-        filename = doc.metadata.get("file_name", "")
+        filename = (doc.metadata or {}).get("file_name", "")
         doc.metadata.update({
             "file_type": ".groovy",
             "source": "magnolia_cms",
