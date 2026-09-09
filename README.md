@@ -108,7 +108,7 @@ This keeps Magnolia CMS lightweight — it stays a pure HTTP client, with zero G
 ## Features
 
 - Natural language to Groovy script generation
-- RAG pipeline grounded on example Magnolia CMS scripts
+- RAG pipeline grounded on example Magnolia CMS scripts, ingested from local files or pulled via Magnolia REST Delivery
 - Expected properties input — tag-based field to guide script output
 - Input guard rails — blocks non-Groovy and modification requests, if disabled (default)
 - Output guard rails — validates and sanitizes generated scripts
@@ -211,6 +211,8 @@ Add your `.groovy` example files to the `data/` folder, then start the API and t
     "path": "./data"
 }
 ```
+
+Alternatively, add `"source": "magnolia"` to the request body to pull scripts directly from Magnolia. Update `path` as needed.
  
 ### 6. Start the API
  
@@ -258,12 +260,13 @@ Generate a Magnolia CMS Groovy script from a natural language query.
  
 ### `POST /v1/scripts/ingest`
  
-Ingest `.groovy` files from the data folder into Qdrant.
+Ingest `.groovy` files from the data folder or pull scripts from Magnolia via REST Delivery into Qdrant.
  
 **Request**
 ```json
 {
-  "path": "./data"
+  "source": "magnolia", // Specify here if scripts are directly pulled from Magnolia, empty if ingested from local
+  "path": "./data"  // Path of script files folder or scripts workspace path
 }
 ```
  
