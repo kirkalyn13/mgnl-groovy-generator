@@ -20,7 +20,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 
-import static com.sample.cms.constants.GroovyGeneratorConstants.*;
+import static com.sample.cms.util.GroovyGeneratorConstants.*;
 import static com.sample.cms.helpers.GroovyGeneratorHelpers.getGroovyGeneratorUrl;
 import static com.sample.cms.helpers.GroovyGeneratorHelpers.getKeystoreValue;
 

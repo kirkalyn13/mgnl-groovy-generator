@@ -1,4 +1,4 @@
-package com.sample.cms.constants;
+package com.sample.cms.util;
 
 public final class GroovyGeneratorConstants {
 

@@ -8,7 +8,7 @@ import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 
-import static com.sample.cms.constants.GroovyGeneratorConstants.*;
+import static com.sample.cms.util.GroovyGeneratorConstants.*;
 
 public class GroovyGeneratorHelpers {
 

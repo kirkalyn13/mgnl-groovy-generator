@@ -33,7 +33,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.List;
 
-import static com.sample.cms.constants.GroovyGeneratorConstants.*;
+import static com.sample.cms.util.GroovyGeneratorConstants.*;
 
 /**
  * Action that generates a Groovy script based on a user query by calling an external
