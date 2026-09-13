@@ -46,6 +46,8 @@ A reference implementation is available in [`./integrations/magnolia`](./integra
 | Observability | LangFuse |
 | Memory | Redis |
 
+> **Note:** Ollama and Gemini were chosen for the implementation specifically to keep the project fully free to run — Ollama for local, self-hosted inference with no API costs, and Gemini for its free tier (no credit card required) for the hosted version. Other providers like OpenAI can be added following the same pattern, but typically require a paid API key.
+
 ## Architecture
 
 ```mermaid
@@ -153,7 +155,7 @@ This is intended as a secondary, scoped demo alongside the primary loosely-coupl
 - Input guard rails — blocks non-Groovy and modification requests, if disabled (default)
 - Output guard rails — validates and sanitizes generated scripts
 - Retry logic — automatically retries if output contains unwanted content
-- Dual LLM support — run fully local via Ollama, or use the Gemini API (free tier, no credit card)
+- Pluggable LLM support — Ollama and Gemini included out of the box; other providers (OpenAI, Anthropic, etc.) can be added via the `LLM_MODE` switch
 - Rate limiting — global request throttling to protect shared API quotas
 - Session Memory - remembers session requests to refine succeeding queries
 
@@ -195,7 +197,7 @@ COLLECTION_NAME=docs_collection_name
 ENABLE_RERANK=set_true_to_enable_colBERT_rerank
 
 # LLM Config
-LLM_MODE=ollama_or_gemini
+LLM_MODE=preferred_llm_mode_like_ollama_or_gemini
 GEMINI_API_KEY=your_gemini_api_key # Required if gemini mode is enabled
 OLLAMA_URL=https://your-ollama-url
 GEN_AI_MODEL=your_gen_ai_model
@@ -220,7 +222,7 @@ SESSION_TTL_MINUTES=30
 SESSION_SIZE=10
 ```
 
-> **Note:** `LLM_MODE` selects the provider (`ollama` or `gemini`) and determines the Qdrant collection suffix (`{COLLECTION_NAME}_{LLM_MODE}`), since embedding dimensions differ between providers (768 for Ollama, 3072 for Gemini) and must live in separate collections.
+> **Note:** `LLM_MODE` selects the provider (`ollama` or `gemini`) and determines the Qdrant collection suffix (`{COLLECTION_NAME}_{LLM_MODE}`), since embedding dimensions differ between providers (768 for Ollama, 3072 for Gemini) and must live in separate collections. This pattern isn't limited to the two built-in providers — any new `LLM_MODE` value (e.g. `openai`) gets its own `{COLLECTION_NAME}_{LLM_MODE}` collection automatically, so mismatched embedding dimensions never collide in the same vector space. Adding a provider just means confirming its embedding dimension and letting the existing suffix logic handle the rest — no separate Qdrant setup required.
  
 ### 3. Install Python dependencies
  
@@ -400,6 +402,7 @@ Get your keys from [cloud.langfuse.com](https://cloud.langfuse.com) — a free t
 ## Improvements
 
 - Ingest more well-documented and labeled Groovy scripts.
+- Add support for additional LLM providers (e.g. OpenAI) alongside Ollama/Gemini.
 
 ## Infrastructure (`/infra`)
 

@@ -18,6 +18,12 @@ def init_llm():
                 return setup_ollama()
             case "gemini":
                 return setup_gemini()
+            # To add a new provider (e.g. OpenAI):
+            # 1. Create config/openai.py with a setup_openai() function
+            #    mirroring setup_ollama()/setup_gemini()
+            # 2. Add a case "openai": return setup_openai()
+            # 3. Ensure Qdrant collection suffix + embedding dims
+            #    are handled for the new mode (see COLLECTION_NAME logic)
             case _:
                 return setup_ollama()
     except Exception as e:
