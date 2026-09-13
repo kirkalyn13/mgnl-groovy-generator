@@ -234,12 +234,12 @@ pip install -r requirements.txt
  
 ### 4. Pull Ollama models (if using `LLM_MODE=ollama`)
 
-​```bash
-ollama pull qwen2.5-coder      # For generative AI functions
+```bash
+ollama pull qwen2.5-coder     # For generative AI functions
 ollama pull nomic-embed-text  # For embedding
-ollama pull qwen3.5            # For tool calling
-ollama pull mistral            # General purpose e.g. extraction or review
-​```
+ollama pull qwen3.5           # For tool calling
+ollama pull mistral           # General purpose e.g. extraction or review
+```
 
 > **Note:** `qwen2.5-coder` is used here as a code-specialized model — generalist models like `mistral` are capable but tend to underperform on structural fidelity to the ingested examples. Worth experimenting with other Ollama models depending on your use case.
 
