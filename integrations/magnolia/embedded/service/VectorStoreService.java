@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import okhttp3.*;
+import com.sample.cms.embedded.dto.ScoredPoint;
 
 import javax.inject.Inject;
 import javax.jcr.RepositoryException;

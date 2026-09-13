@@ -1,4 +1,4 @@
-package com.sample.cms.embedded.service;
+package com.sample.cms.embedded.dto;
 
 import com.fasterxml.jackson.databind.JsonNode;
 

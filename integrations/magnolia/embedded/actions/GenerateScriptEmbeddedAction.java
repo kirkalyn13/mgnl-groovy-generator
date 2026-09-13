@@ -16,7 +16,7 @@ import info.magnolia.ui.framework.message.MessagesManager;
 import info.magnolia.ui.observation.DatasourceObservation;
 import org.apache.commons.lang.StringUtils;
 import com.sample.cms.embedded.service.EmbeddingService;
-import com.sample.cms.embedded.service.ScoredPoint;
+import com.sample.cms.embedded.dto.ScoredPoint;
 import com.sample.cms.embedded.service.VectorStoreService;
 
 import javax.inject.Inject;
