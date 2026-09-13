@@ -63,6 +63,15 @@ Add the groovy generator API URL and API Key to the Passwords app with the follo
 
 For a deployed environment, replace `localhost:8000` with the URL of your hosted FastAPI instance.
 
+## Alternative: Magnolia-Native (Embedded) Approach
+
+A proof-of-concept variant of this integration runs the full RAG pipeline (embedding, vector search, generation) directly inside Magnolia, rather than calling the external FastAPI service described above.
+
+- Eliminates the middleman API — no external service call
+- Trades that off for tighter coupling to Magnolia's runtime and dependency footprint
+- Intended as a secondary, scoped demo alongside this primary implementation, not a replacement
+
+See [`Native Docs`](./embedded/README.md) for setup and configuration.
 
 ## Action Definition
 

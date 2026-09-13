@@ -105,6 +105,46 @@ The system exposes a standalone REST API consumed by two independent clients —
 
 This keeps Magnolia CMS lightweight — it stays a pure HTTP client, with zero GenAI compute or dependency footprint pushed onto it.
 
+### Alternative: Magnolia-Native (Embedded) Approach
+
+A proof-of-concept variant explores what a tightly-coupled implementation would look like instead — running the full RAG pipeline directly inside Magnolia rather than calling out to the FastAPI service above.
+
+```mermaid
+flowchart RL
+
+    subgraph CLIENT["Client"]
+        direction TB
+        MAGNOLIA["📝 Magnolia CMS
+        Custom Action"]
+    end
+
+    MAGNOLIA -->|"1. Embed query"| EMBED["🧠 Embedding Service
+    LLM e.g. Gemini"]
+    EMBED -->|"2. Query vector"| VSTORE["🗄️ Vector Store
+    e.g. Qdrant"]
+    VSTORE -->|"3. Retrieved context"| MAGNOLIA
+    MAGNOLIA -->|"4. Prompt + context"| GENERATE["⚡ Generation Service
+    LLM e.g. Gemini"]
+    GENERATE -->|"5. Generated script"| MAGNOLIA
+    MAGNOLIA -->|"6. Save script node"| JCR["💾 JCR
+    scripts workspace"]
+
+    style MAGNOLIA fill:#f0fdf4,stroke:#16a34a,stroke-width:2px,color:#000000
+    style CLIENT fill:#ffffff,stroke:#16a34a,stroke-width:1px,stroke-dasharray:5,color:#000000
+    style EMBED fill:#fefce8,stroke:#ca8a04,stroke-width:2px,color:#000000
+    style GENERATE fill:#fefce8,stroke:#ca8a04,stroke-width:2px,color:#000000
+    style VSTORE fill:#eff6ff,stroke:#3b82f6,stroke-width:2px,color:#000000
+    style JCR fill:#fdf4ff,stroke:#a855f7,stroke-width:2px,color:#000000
+```
+
+**Tightly coupled by design:**
+
+- No standalone REST API or FastAPI server — Magnolia calls the LLM and vector store directly, in-process
+- Embedding, retrieval, and generation all happen synchronously within the dialog action's execution
+- Eliminates the middleman service entirely, at the cost of pushing GenAI dependencies and compute into Magnolia's own runtime
+
+This is intended as a secondary, scoped demo alongside the primary loosely-coupled implementation above — not a replacement. See [`Native Docs`](./integrations/magnolia/embedded/README.md) for setup and configuration.
+
 ## Features
 
 - Natural language to Groovy script generation
