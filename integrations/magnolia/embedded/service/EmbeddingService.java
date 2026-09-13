@@ -13,6 +13,10 @@ import java.io.IOException;
 import static com.sample.cms.embedded.util.EmbeddedGroovyGeneratorConstants.*;
 import static com.sample.cms.helpers.GroovyGeneratorHelpers.getKeystoreValue;
 
+/**
+ * Wraps calls to LLM's REST API for generating text embeddings and LLM script completions,
+ * reading endpoint URLs and credentials from the Magnolia keystore.
+ */
 public class EmbeddingService {
     private final ObjectMapper mapper;
 

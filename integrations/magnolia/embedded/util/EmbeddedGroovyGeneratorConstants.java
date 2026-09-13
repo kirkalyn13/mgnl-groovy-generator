@@ -1,5 +1,9 @@
 package com.sample.cms.embedded.util;
 
+/**
+ * Constants for the Magnolia-native (embedded) Groovy generator, including vector search
+ * defaults and keystore node paths for the LLM and vector store configuration.
+ */
 public class EmbeddedGroovyGeneratorConstants {
     private EmbeddedGroovyGeneratorConstants() {}
 

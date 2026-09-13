@@ -5,6 +5,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * A single similarity search result returned by the vector store, holding the matched point's ID,
+ * relevance score, and stored payload.
+ */
 public record ScoredPoint(String id, float score, Map<String, Object> payload) {
     /**
      * Parses a single vector store search result node into a {@link ScoredPoint}, extracting the

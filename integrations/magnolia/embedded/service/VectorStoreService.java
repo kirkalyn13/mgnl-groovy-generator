@@ -15,6 +15,10 @@ import java.util.List;
 import static com.sample.cms.embedded.util.EmbeddedGroovyGeneratorConstants.*;
 import static com.sample.cms.helpers.GroovyGeneratorHelpers.getKeystoreValue;
 
+/**
+ * Performs similarity search against a vector store collection
+ * Returns matches as {@link ScoredPoint} instances.
+ */
 public class VectorStoreService {
     private final OkHttpClient client;
     private final ObjectMapper mapper;

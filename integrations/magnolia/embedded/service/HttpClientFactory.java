@@ -4,6 +4,10 @@ import okhttp3.OkHttpClient;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Builds a shared {@link OkHttpClient} instance with timeouts tuned for LLM calls, for use across
+ * the embedded Groovy generator's services.
+ */
 public class HttpClientFactory {
     /**
      * Builds a new {@link OkHttpClient} configured with connect and read timeouts suitable for
