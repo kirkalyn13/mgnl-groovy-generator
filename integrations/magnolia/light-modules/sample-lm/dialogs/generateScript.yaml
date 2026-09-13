@@ -31,7 +31,7 @@ actions:
       multiple: true
   commit:
     label: Generate Script
-    $type: generateScriptAction
+    $type: generateScriptAction  # generateScriptAction (FastAPI) or generateScriptEmbeddedAction (Magnolia-native)
     allowModifications: false
 footerLayout:
   $type: defaultEditorActionLayout
