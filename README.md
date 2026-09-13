@@ -39,7 +39,7 @@ A reference implementation is available in [`./integrations/magnolia`](./integra
 |---|---|
 | Frontend | React, Vite, Tailwind CSS |
 | Backend | FastAPI, Python |
-| LLM & Embeddings | Ollama (`mistral`, `nomic-embed-text`, `qwen3.5`) or Gemini API (`gemini-3.5-flash-lite`, `gemini-embedding-2-preview`) |
+| LLM & Embeddings | Ollama (`qwen2.5-coder`, `nomic-embed-text`, `qwen3.5`) or Gemini API (`gemini-3.5-flash-lite`, `gemini-embedding-2-preview`) |
 | Vector Store | Qdrant |
 | RAG Framework | LlamaIndex |
 | CMS Integration | Magnolia CMS |
@@ -74,7 +74,7 @@ flowchart RL
     etc...]
     REST --> FASTAPI["⚡ FastAPI Server"]
     FASTAPI --> OLLAMA["🦙 Ollama LLM
-    mistral · nomic-embed-text"]
+    qwen2.5-coder · nomic-embed-text"]
     FASTAPI <--> QDRANT["🗄️ Qdrant
     Vector Store"]
     OLLAMA --> QDRANT
@@ -101,7 +101,7 @@ The system exposes a standalone REST API consumed by two independent clients —
 **Loosely coupled by design:**
 
 - Magnolia integrates via HTTP (`POST /v1/scripts/generate`, `POST /v1/scripts/ingest`)
-- Inference and retrieval — Ollama (mistral, nomic-embed-text) or Gemini for generation/embeddings, Qdrant for vector search — lives entirely behind the FastAPI service
+- Inference and retrieval — Ollama (qwen2.5-coder, nomic-embed-text) or Gemini for generation/embeddings, Qdrant for vector search — lives entirely behind the FastAPI service
 - Session state is externalized to Redis (or in-memory fallback), and observability runs through Langfuse — both independent of either client
 - Clients are interchangeable: the React UI and the Magnolia action can be added, removed, or redeployed without any change to the API or backend
 
@@ -235,10 +235,12 @@ pip install -r requirements.txt
 ### 4. Pull Ollama models (if using `LLM_MODE=ollama`)
 
 ​```bash
-ollama pull mistral       # For generative AI functions
+ollama pull qwen2.5-coder      # For generative AI functions
 ollama pull nomic-embed-text  # For embedding
-ollama pull qwen3.5       # For tool calling
+ollama pull qwen3.5            # For tool calling
 ​```
+
+> **Note:** `qwen2.5-coder` is used here as a code-specialized model — generalist models like `mistral` are capable but tend to underperform on structural fidelity to the ingested examples. Worth experimenting with other Ollama models depending on your use case.
 
 If using `LLM_MODE=gemini`, no local pulls needed — just set `GEMINI_API_KEY` in `.env`.
  
@@ -403,6 +405,7 @@ Get your keys from [cloud.langfuse.com](https://cloud.langfuse.com) — a free t
 
 - Ingest more well-documented and labeled Groovy scripts.
 - Add support for additional LLM providers (e.g. OpenAI) alongside Ollama/Gemini.
+- Experiment with different Ollama models for generation (e.g. code-specialized vs. generalist) — model choice has a bigger impact on output quality than pipeline tuning.
 
 ## Infrastructure (`/infra`)
 
