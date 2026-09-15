@@ -1,0 +1,5 @@
+'commands':
+  'jcr:primaryType': 'mgnl:content'
+  'sample-module':
+    'ingestScripts':
+      'class': 'com.sample.cms.embedded.commands.IngestScriptsCommand'

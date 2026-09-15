@@ -1,0 +1,7 @@
+label: Ingest Scripts
+icon: icon-upload
+$type: ingestScriptsAction
+availability:
+  root: true
+  nodeTypes:
+    - mgnl:folder
