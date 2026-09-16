@@ -45,7 +45,18 @@ public class EmbeddingService {
                 .build();
 
         try (Response response = client.newCall(request).execute()) {
-            JsonNode values = mapper.readTree(response.body().string()).path("embedding").path("values");
+            String raw = response.body().string();
+            JsonNode root = mapper.readTree(raw);
+
+            if (root.has("error")) {
+                throw new IOException("Embedding error: " + root.path("error").path("message").asText());
+            }
+
+            JsonNode values = root.path("embedding").path("values");
+            if (!values.isArray() || values.isEmpty()) {
+                throw new IOException("No embedding values returned: " + raw);
+            }
+
             float[] result = new float[values.size()];
             for (int i = 0; i < values.size(); i++) result[i] = (float) values.get(i).asDouble();
             return result;
