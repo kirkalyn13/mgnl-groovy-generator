@@ -1,0 +1,5 @@
+'ingestScripts':
+  'active': 'true'
+  'catalog': 'sample-module'
+  'command': 'ingestScripts'
+  'cron': '0 0 0 1/1 * ? *'
