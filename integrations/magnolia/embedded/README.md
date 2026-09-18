@@ -60,6 +60,10 @@ Before use, configure the following values via the Magnolia **Passwords app** at
 | `/groovy-generator/embedded/vector-store/api-key` | API key for the vector store, if authentication is enabled |
 | `/groovy-generator/embedded/vector-store/collection-name` | Name of the collection to search for retrieval context |
 
+### Groovy App Decorators
+
+The custom actions (`generateScript`, `ingestScripts`, etc.) are wired into the Groovy app via decorators at: [`/integrations/magnolia/light-modules/sample-lm/decorations/groovy/apps`](../light-modules/sample-lm/decorations/groovy/apps). Add or edit action/actionbar definitions here to surface them in the Groovy app's UI.
+
 ### Action Usage
 
 Set the dialog's commit action `$type` to select which implementation runs:
@@ -67,3 +71,41 @@ Set the dialog's commit action `$type` to select which implementation runs:
 ```yaml
 $type: generateScriptAction  # generateScriptAction (FastAPI) or generateScriptEmbeddedAction (Magnolia-native)
 ```
+
+### Ingestion
+
+Scripts can be ingested directly within Magnolia CMS, without going through the external FastAPI service.
+
+Ingestion is implemented as a command (catalog `sample-module`, command name `ingestScripts`) rather than baked directly into an action, so it can be triggered from multiple places — a UI action, or a scheduled cron job — without duplicating logic.
+
+#### Setup
+
+Declare the command on the commands catalog:
+
+```yaml
+'commands':
+  'jcr:primaryType': 'mgnl:content'
+  'sample-module':
+    'ingestScripts':
+      'class': 'com.sample.cms.embedded.commands.IngestScriptsCommand'
+```
+
+#### Usage
+
+**Via scheduler (cron job)** — runs unattended, ingesting from the workspace root by default:
+
+```yaml
+'ingestScripts':
+  'active': 'true'
+  'catalog': 'sample-module'
+  'command': 'ingestScripts'
+  'cron': '0 0 0 1/1 * ? *'
+```
+
+**Via custom action** — triggered manually from the content app, scoped to whichever folder (or the root) is currently selected:
+
+```yaml
+$type: ingestScriptsAction
+```
+
+> Bootstrap configuration references for the above live under [`resources/bootstrap/sample-module`](../resources/bootstrap/sample-module).

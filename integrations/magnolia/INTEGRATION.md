@@ -50,9 +50,15 @@ The Groovy app's `browser` view needs two components registered in the module de
 
 Add this alongside your other `<components>` blocks in the module descriptor before deploying.
 
+### Groovy App Decorators
+
+The custom actions (`generateScript`, `ingestScripts`, etc.) are wired into the Groovy app via decorators at: [`/integrations/magnolia/light-modules/sample-lm/decorations/groovy/apps`](./light-modules/sample-lm/decorations/groovy/apps). 
+Add or edit action/actionbar definitions here to surface them in the Groovy app's UI.
+
 ### Browser Refresh Behavior
 
 After a script is generated, the Groovy app's browser view performs a full page reload to show the new script. This is expected — the underlying browser view has no built-in mechanism to refresh in place after content changes made outside its normal save flow.
+
 
 ## Configuration
 
