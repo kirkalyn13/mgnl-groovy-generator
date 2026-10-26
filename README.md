@@ -39,7 +39,7 @@ A reference implementation is available in [`./integrations/magnolia`](./integra
 |---|---|
 | Frontend | React, Vite, Tailwind CSS |
 | Backend | FastAPI, Python |
-| LLM & Embeddings | Ollama (`qwen2.5-coder`, `nomic-embed-text`, `qwen3.5`) or Gemini API (`gemini-3.5-flash-lite`, `gemini-embedding-2-preview`) |
+| LLM & Embeddings | Ollama (`qwen3.5`, `qwen2.5-coder`, `nomic-embed-text`) or Gemini API (`gemini-3.5-flash-lite`, `gemini-embedding-2-preview`) |
 | Vector Store | Qdrant |
 | RAG Framework | LlamaIndex |
 | CMS Integration | Magnolia CMS |
@@ -51,13 +51,12 @@ A reference implementation is available in [`./integrations/magnolia`](./integra
 ## Architecture
 
 ```mermaid
-flowchart RL
+flowchart LR
 
     subgraph CLIENTS["Clients"]
         direction TB
         REACT["⚛️   React + Vite UI"]
-        MAGNOLIA["📝 Magnolia CMS
-        Custom Action"]
+        MAGNOLIA["📝 Magnolia CMS\nCustom Action"]
     end
 
     subgraph SESSION["Session Store"]
@@ -68,19 +67,18 @@ flowchart RL
         (fallback)"]
     end
 
-    CLIENTS -->|"HTTP Request"| REST["🌐 REST API
-    POST /v1/scripts/generate
-    POST /v1/scripts/ingest"
-    etc...]
-    REST --> FASTAPI["⚡ FastAPI Server"]
-    FASTAPI --> OLLAMA["🦙 Ollama LLM
-    qwen2.5-coder · nomic-embed-text"]
-    FASTAPI <--> QDRANT["🗄️ Qdrant
-    Vector Store"]
-    OLLAMA --> QDRANT
-    FASTAPI -->|"JSON Response"| CLIENTS
-    FASTAPI -->|"Traces & Metrics"| LANGFUSE["📊 Langfuse
-    Observability"]
+    subgraph LLM["LLM Providers"]
+        direction TB
+        OLLAMA["🦙 Ollama (Local)\nqwen3.5 · nomic-embed-text"]
+        GEMINI["✨ Gemini (External API)\nGoogle AI"]
+    end
+
+    CLIENTS <-->|"HTTP Request / JSON Response"| REST["🌐 REST API\nPOST /v1/generate\nPOST /v1/ingest"]
+    REST <--> FASTAPI["⚡ FastAPI Server"]
+    FASTAPI <-->|"Generate / Embed"| LLM
+    FASTAPI <--> QDRANT["🗄️ Qdrant Vector Store"]
+    OLLAMA -->|"Embeddings"| QDRANT
+    FASTAPI -->|"Traces & Metrics"| LANGFUSE["📊 Langfuse Observability"]
     FASTAPI <-->|"Read / Write Session"| SESSION
 
     style REACT fill:#f0fdf4,stroke:#16a34a,stroke-width:2px,color:#000000
@@ -89,6 +87,8 @@ flowchart RL
     style REST fill:#f9fafb,stroke:#6b7280,stroke-width:2px,color:#000000
     style FASTAPI fill:#f0fdf4,stroke:#16a34a,stroke-width:2px,color:#000000
     style OLLAMA fill:#fefce8,stroke:#ca8a04,stroke-width:2px,color:#000000
+    style GEMINI fill:#fff7ed,stroke:#ea580c,stroke-width:2px,color:#000000
+    style LLM fill:#ffffff,stroke:#ca8a04,stroke-width:1px,stroke-dasharray:5,color:#000000
     style QDRANT fill:#eff6ff,stroke:#3b82f6,stroke-width:2px,color:#000000
     style LANGFUSE fill:#fdf4ff,stroke:#a855f7,stroke-width:2px,color:#000000
     style REDIS fill:#fff1f2,stroke:#e11d48,stroke-width:2px,color:#000000
