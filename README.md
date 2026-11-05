@@ -6,7 +6,7 @@ Live Site: [mgnl-groovy-generator-app](https://mgnl-groovy-generator-app.vercel.
 
 ![Demo](./assets/app-demo.gif)
 
-[▶ Watch Demo](https://drive.google.com/file/d/1a0-2MhMqQu2rp6Vvo1Xky-c1rMaCmM5D/view?usp=sharing)
+[▶ Watch Demo](https://drive.google.com/file/d/14FrqoY9GaKsmVx3kMg67dWm-OybCGajv/view?usp=drive_link)
 
 ## Overview
 
@@ -472,7 +472,3 @@ Coverage priorities:
 ## Authors
 
 - [Engr. Kirk Alyn Santos](https://github.com/kirkalyn13)
-
-## License
-
-MIT
