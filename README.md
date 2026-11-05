@@ -469,6 +469,8 @@ Coverage priorities:
 - **Integration** — mocked LLM/agent calls
 - **API** — FastAPI routers via `TestClient`
 
-## Authors
+## Author
 
 - [Engr. Kirk Alyn Santos](https://github.com/kirkalyn13)
+
+© 2026 Kirk Alyn Santos. All rights reserved.
